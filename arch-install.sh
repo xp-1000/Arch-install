@@ -112,12 +112,11 @@ dd conv=notrunc bs=440 count=1 if=/usr/lib/syslinux/gptmbr.bin of=/dev/sda
 echo root:azer | chpasswd
 
 # Set initial configuration
-echo -n "Quick general configuration ... "
-echo "export EDITOR=vim" >> /etc/profile
-echo "alias vi='vim'" >> /etc/bash.bashrc
-echo "[archlinuxfr]" >> /etc/pacman.conf
-echo "SigLevel = Never" >> /etc/pacman.conf
-echo 'Server = http://repo.archlinux.fr/$arch' >> /etc/pacman.conf
+echo -n "Quick basic configuration ... "
+mv -f "`dirname $0`/bash.bashrc" /etc
+mv -f "`dirname $0`/profile" /etc
+sed -i -e 's/TIMEOUT 50/TIMEOUT 10/' /boot/syslinux/syslinux.cfg
+echo -e '\n[archlinuxfr]\nSigLevel = Never\nServer = http://repo.archlinux.fr/$arch\n' >> /etc/pacman.conf
 pacman -Syu
 pacman -S vim --noconfirm
 pacman -S openssh --noconfirm
