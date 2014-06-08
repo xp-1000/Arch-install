@@ -92,21 +92,21 @@ echo "KEYMAP=fr-pc" > /etc/vconsole.conf
 mkinitcpio -p linux
  
 # install syslinux bootloader
-#syslinux-install_update -i -a -m
+syslinux-install_update -i -a -m 2> /dev/null
  
 # update syslinux config with correct root diskyaou				
 
 #sed 's/root=.*/root=\/dev\/sda3 ro/' < /boot/syslinux/syslinux.cfg > /boot/syslinux/syslinux.cfg.new
 #mv /boot/syslinux/syslinux.cfg.new /boot/syslinux/syslinux.cfg
 
-cp /usr/lib/syslinux/menu.c32 /boot/syslinux
-cp /usr/lib/syslinux/hdt.c32 /boot/syslinux
-cp /usr/lib/syslinux/reboot.c32 /boot/syslinux
-cp /usr/lib/syslinux/poweroff.com /boot/syslinux
-extlinux --install /boot/syslinux
+#cp /usr/lib/syslinux/menu.c32 /boot/syslinux
+#cp /usr/lib/syslinux/hdt.c32 /boot/syslinux
+#cp /usr/lib/syslinux/reboot.c32 /boot/syslinux
+#cp /usr/lib/syslinux/poweroff.com /boot/syslinux
+#extlinux --install /boot/syslinux
 
 # Set flag boot disk for GPT
-dd conv=notrunc bs=440 count=1 if=/usr/lib/syslinux/gptmbr.bin of=/dev/sda
+dd conv=notrunc bs=440 count=1 if=/usr/lib/syslinux/bios/gptmbr.bin of=/dev/sda
 
 # set root password to "root"
 echo root:azer | chpasswd
