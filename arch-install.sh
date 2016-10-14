@@ -1,3 +1,6 @@
+#!/bin/bash
+set -e
+
 # confirm you can access the internet
 echo -n "Testing Internet connection ... "
 ping -q -w 1 -c 1 google.fr > /dev/null && echo "OK" || (echo "Your Internet seems broken. Press Ctrl-C to abort or enter to continue." && read)
