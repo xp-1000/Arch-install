@@ -17,9 +17,9 @@ endPart=$((memSwap+100))
 device=
 fdisk -l
 while [[ ! -b $device ]]; do
-  read -p "Type your device path (e.g. ${device}): " -e device
+  read -p "Type your device path (e.g. /dev/sda): " -e device
 done
-echo -e "\033[0;31m/!\ Warning : $device will be totally erased !"
+echo -e "\033[0;31m/!\ Warning : $device will be totally erased !\033[0m"
 while [[ ! "$go" == "y" ]]; do
  read -p "Are you sure to continue (y/n): " -e go
 done
