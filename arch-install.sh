@@ -22,6 +22,7 @@ fdisk -l
 while [[ ! -b $device ]]; do
   read -p "Type your device path (e.g. /dev/sda): " -e device
 done
+uuid=$(blkid -o value -s UUID ${device}3)
 echo -e "\033[0;31m/!\ Warning : $device will be totally erased !\033[0m"
 while [[ ! "$go" == "y" ]]; do
  read -p "Are you sure to continue (y/n): " -e go
@@ -109,7 +110,6 @@ mkinitcpio -p linux
 syslinux-install_update -i -a -m 2> /dev/null
  
 # update syslinux config with correct root diskyaou				
-uuid=$(blkid -o value -s UUID ${device}3)
 sed -i "s/root=.*/root=UUID=${uuid} rw/" /boot/syslinux/syslinux.cfg
 
 #cp /usr/lib/syslinux/menu.c32 /boot/syslinux
