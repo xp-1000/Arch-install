@@ -14,33 +14,44 @@ then
 	memSwap=4096
 fi
 endPart=$((memSwap+100))
+device=
+fdisk -l
+while [[ ! -b $device ]]; do
+  read -p "Type your device path (e.g. ${device}): " -e device
+done
+echo -e "\033[0;31m/!\ Warning : $device will be totally erased !"
+while [[ ! "$go" == "y" ]]; do
+ read -p "Are you sure to continue (y/n): " -e go
+done
+
+exit 0
  
 # make 2 partitions on the disk.
 echo -n "Partitioning ... "
-parted -s /dev/sda mktable gpt
-parted -s /dev/sda mkpart primary 0% 100m
-parted -s /dev/sda mkpart primary 100m ${endPart}m
-parted -s /dev/sda mkpart primary ${endPart}m 100%
+parted -s ${device} mktable gpt
+parted -s ${device} mkpart primary 0% 100m
+parted -s ${device} mkpart primary 100m ${endPart}m
+parted -s ${device} mkpart primary ${endPart}m 100%
 echo "OK"
 
 
 # make filesystems
 echo -n "Creating file system ... "
 # /boot
-mkfs.ext4 /dev/sda1 > /dev/null 2>&1
+mkfs.ext4 '-O ^64bit' ${device}1 > /dev/null 2>&1
 # swap
-mkswap /dev/sda2 > /dev/null 2>&1
+mkswap ${device}2 > /dev/null 2>&1
 # /
-mkfs.ext4 /dev/sda3 > /dev/null 2>&1
+mkfs.ext4 ${device}3 > /dev/null 2>&1
 echo "OK"
 
 # set up /mnt
 echo -n "Mounting partitions ... "
-mount /dev/sda3 /mnt
+mount ${device}3 /mnt
 mkdir /mnt/boot
-mount /dev/sda1 /mnt/boot
+mount ${device}1 /mnt/boot
 # set up swap
-swapon /dev/sda2
+swapon ${device}2
 echo "OK"
  
 # rankmirrors to make this faster (though it takes a while)
@@ -68,10 +79,10 @@ pacstrap /mnt syslinux
 cp /etc/pacman.d/mirrorlist* /mnt/etc/pacman.d
  
 # generate fstab
-genfstab -p /mnt >> /mnt/etc/fstab
+genfstab -p -U /mnt >> /mnt/etc/fstab
  
 # chroot
-arch-chroot /mnt /bin/bash <<'EOF'
+arch-chroot /mnt /bin/bash <<EOF
  
 # set initial hostname
 echo "archlinux-$(date -I)" >/etc/hostname
@@ -97,9 +108,8 @@ mkinitcpio -p linux
 syslinux-install_update -i -a -m 2> /dev/null
  
 # update syslinux config with correct root diskyaou				
-
-#sed 's/root=.*/root=\/dev\/sda3 ro/' < /boot/syslinux/syslinux.cfg > /boot/syslinux/syslinux.cfg.new
-#mv /boot/syslinux/syslinux.cfg.new /boot/syslinux/syslinux.cfg
+uuid=$(blkid -o value -s UUID ${device}3)
+sed -i "s/root=.*/root=UUID=${uuid} rw/" /boot/syslinux/syslinux.cfg
 
 #cp /usr/lib/syslinux/menu.c32 /boot/syslinux
 #cp /usr/lib/syslinux/hdt.c32 /boot/syslinux
@@ -108,7 +118,7 @@ syslinux-install_update -i -a -m 2> /dev/null
 #extlinux --install /boot/syslinux
 
 # Set flag boot disk for GPT
-dd conv=notrunc bs=440 count=1 if=/usr/lib/syslinux/bios/gptmbr.bin of=/dev/sda
+dd conv=notrunc bs=440 count=1 if=/usr/lib/syslinux/bios/gptmbr.bin of=${device}
 
 # set root password to "root"
 echo root:azer | chpasswd
@@ -130,9 +140,9 @@ EOF
  
 # unmount
 umount /mnt/{boot,}
-swapoff /dev/sda2
+swapoff ${device}2
 
 # Set Flag boot BIOS for GTP
-sgdisk /dev/sda --attributes=:1:set:2
+sgdisk ${device} --attributes=:1:set:2
  
 echo "Done! Unmount the CD image from the VM, then type 'reboot'."
