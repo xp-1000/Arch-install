@@ -65,7 +65,7 @@ echo "OK"
 echo "Updating repository database ... "
 pacman -Syy
 # Install keys for archlinux packages
-pacman -S archlinux-keyring
+pacman -S --noconfirm archlinux-keyring 
 
 echo "Installing ArchLinux ... "
 # install base packages (take a coffee break if you have slow internet)
