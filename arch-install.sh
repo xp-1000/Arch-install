@@ -23,8 +23,6 @@ echo -e "\033[0;31m/!\ Warning : $device will be totally erased !\033[0m"
 while [[ ! "$go" == "y" ]]; do
  read -p "Are you sure to continue (y/n): " -e go
 done
-
-exit 0
  
 # make 2 partitions on the disk.
 echo -n "Partitioning ... "
