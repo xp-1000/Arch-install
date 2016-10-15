@@ -13,8 +13,9 @@ ln -sfv /run/user/$UID/ /home/$USER/.compose-cache
 echo -e '\n[Windows]\nBorderlessMaximized=true' >> ${HOME}/.config/kwinrc
 yaourt -S --noconfirm firefox-kde-opensuse
 pacman -S firefox-i18n-fr
+mv -f "`dirname $0`/files/kde/autostart/*.desktop"  $HOME/.config/autostart/
 systemctl start sddm
-# themes arc + autostart yakuake
+# themes arc 
 # shortcuts + reglages kde generaux ?
 # Boulot seulement : terraform  + restaurer le backup firefox et cie
 
