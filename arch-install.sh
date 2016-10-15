@@ -130,9 +130,7 @@ echo root:azer | chpasswd
 
 # Set initial configuration
 echo -n "Quick basic configuration ... "
-mv -f "`dirname $0`/bash.bashrc" /etc
-mv -f "`dirname $0`/profile" /etc
-sed -i -e 's/TIMEOUT 50/TIMEOUT 10/' /boot/syslinux/syslinux.cfg
+ed -i -e 's/TIMEOUT 50/TIMEOUT 10/' /boot/syslinux/syslinux.cfg
 echo -e '\n[archlinuxfr]\nSigLevel = Never\nServer = http://repo.archlinux.fr/$arch\n' >> /etc/pacman.conf
 pacman -Syu
 pacman -S vim yaourt --noconfirm
@@ -142,6 +140,10 @@ systemctl enable ntpd
 
 # end section sent to chroot
 EOF
+
+# Copy default bashrc and profile files
+mv -f "`dirname $0`/files/bash.bashrc" /mnt/etc
+mv -f "`dirname $0`/files/profile" /mnt/etc
  
 while ! ([[ "$wifi" == "y" ]] || [[ "$wifi" == "n" ]]); do
  read -p "Do you want install wifi support ? (y/n): " -e wifi
