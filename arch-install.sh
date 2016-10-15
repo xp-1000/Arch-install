@@ -23,10 +23,14 @@ while [[ ! -b $device ]]; do
   read -p "Type your device path (e.g. /dev/sda): " -e device
 done
 uuid=$(blkid -o value -s UUID ${device}3)
+uuidSwap=$(blkid -o value -s UUID ${device}2)
 echo -e "\033[0;31m/!\ Warning : $device will be totally erased !\033[0m"
-while [[ ! "$go" == "y" ]]; do
- read -p "Are you sure to continue (y/n): " -e go
+while ! ([[ "$go" == "y" ]] || [[ "$go" == "n" ]]); do
+ read -p "Are you sure to continue ? (y/n): " -e go
 done
+if [[ $go == "n" ]]; then
+  exit 1
+fi
  
 # make 2 partitions on the disk.
 echo -n "Partitioning ... "
@@ -110,7 +114,7 @@ mkinitcpio -p linux
 syslinux-install_update -i -a -m 2> /dev/null
  
 # update syslinux config with correct root diskyaou				
-sed -i "s/root=.*/root=UUID=${uuid} rw/" /boot/syslinux/syslinux.cfg
+sed -i "s/root=.*/root=UUID=${uuid} resume=/dev/disk/by-uuid/${uuidSwap} rw" /boot/syslinux/syslinux.cfg
 
 #cp /usr/lib/syslinux/menu.c32 /boot/syslinux
 #cp /usr/lib/syslinux/hdt.c32 /boot/syslinux
@@ -131,13 +135,20 @@ mv -f "`dirname $0`/profile" /etc
 sed -i -e 's/TIMEOUT 50/TIMEOUT 10/' /boot/syslinux/syslinux.cfg
 echo -e '\n[archlinuxfr]\nSigLevel = Never\nServer = http://repo.archlinux.fr/$arch\n' >> /etc/pacman.conf
 pacman -Syu
-pacman -S vim --noconfirm
-pacman -S openssh --noconfirm
+pacman -S vim yaourt --noconfirm
+pacman -S openssh ntp --noconfirm
 systemctl enable sshd
-pacman -S yaourt --noconfirm
+systemctl enable ntpd
 
 # end section sent to chroot
 EOF
+ 
+while ! ([[ "$wifi" == "y" ]] || [[ "$wifi" == "n" ]]); do
+ read -p "Do you want install wifi support ? (y/n): " -e wifi
+done
+if [[ $wifi == "y" ]]; then
+  pacstrap /mnt dialog wpa_supplicant
+fi
  
 # unmount
 umount /mnt/{boot,}
