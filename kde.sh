@@ -5,11 +5,16 @@ sudo pacman -Rsn --noconfirm plasma-mediacenter kdebase-konqueror kdebase-konq-p
 sudo pacman -S --noconfirm ttf-freefont ttf-dejavu ttf-liberation networkmanager atom
 sudo systemctl enable sddm
 sudo systemctl enable NetworkManager
-sudo sed -i 's/^Current=$/Current=breeze/'
-sudo sed -i 's/^Numlock=none$/Numlock=on/'
+sudo sed -i 's/^Current=$/Current=breeze/' /etc/sddm.conf
+sudo sed -i 's/^CursorTheme=$/CursorTheme=brise/' /etc/sddm.conf
+sudo sed -i 's/^Numlock=none$/Numlock=on/' /etc/sddm.conf
 mkdir ${HOME}/.compose-cache/
 ln -sfv /run/user/$UID/ /home/$USER/.compose-cache
 echo -e '\n[Windows]\nBorderlessMaximized=true' >> ${HOME}/.config/kwinrc
 yaourt -S --noconfirm firefox-kde-opensuse
 pacman -S firefox-i18n-fr
 systemctl start sddm
+# themes arc + autostart yakuake
+# shortcuts + reglages kde generaux ?
+# Boulot seulement : terraform  + restaurer le backup firefox et cie
+
