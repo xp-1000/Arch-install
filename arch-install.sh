@@ -1,4 +1,5 @@
 #!/bin/bash
+# This script should be run after internet configuration from archlinux iso
 set -e
 
 # confirm you can access the internet
@@ -133,7 +134,7 @@ echo -n "Quick basic configuration ... "
 ed -i -e 's/TIMEOUT 50/TIMEOUT 10/' /boot/syslinux/syslinux.cfg
 echo -e '\n[archlinuxfr]\nSigLevel = Never\nServer = http://repo.archlinux.fr/$arch\n' >> /etc/pacman.conf
 pacman -Syu
-pacman -S vim yaourt --noconfirm
+pacman -S vim yaourt pacman bash-completion --noconfirm
 pacman -S openssh ntp --noconfirm
 systemctl enable sshd
 systemctl enable ntpd

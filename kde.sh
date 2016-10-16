@@ -1,4 +1,9 @@
 #!/bin/bash
+# This script should be run by unprivileged user from the installed system
+if [[ $EUID -eq 0 ]]; then
+   echo "This script should not be run as root" 1>&2
+   exit 1
+fi
 sudo pacman -S --noconfirm plasma kdebase kde-l10n-fr 
 sudo pacman -S --noconfirm yakuake phonon-qt4-vlc phonon-qt5-vlc kscreen hunspell-fr spectacle kdegraphics-okular breeze-gtk ark
 sudo pacman -Rsn --noconfirm plasma-mediacenter kdebase-konqueror kdebase-konq-plugins kate 
