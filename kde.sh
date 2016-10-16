@@ -39,9 +39,10 @@ sed -i 's/^loginMode.*$/loginMode=default/' ${HOME}/.config/ksmserverrc
 sed -i 's/Switch to Next Desktop=none/Switch to Next Desktop=Ctrl+Alt+Right/' ${HOME}/.config/kglobalshortcutsrc
 sed -i 's/Switch to Previous Desktop=none/Switch to Previous Desktop=Ctrl+Left+Right/' ${HOME}/.config/kglobalshortcutsrc
 sed -i 's/Walk Through Windows (Reverse)=Alt+Shift+Backtab/Walk Through Windows (Reverse)=Alt+Shift+Tab/' ${HOME}/.config/kglobalshortcutsrc
-
-
 sudo systemctl start sddm.service
-# themes arc 
-# shortcuts 
+# themes arc kde
+# shortcuts kde
+## kdewallet for ssh key support
+# export SSH_AUTH_SOCK="$XDG_RUNTIME_DIR/ssh-agent.socket"
+# export SSH_ASKPASS="/usr/bin/ksshaskpass"
 
