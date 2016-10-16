@@ -1,0 +1,4 @@
+[Module-baloosearchmodule]
+autoload=false
+[Module-remotedirnotify]
+autoload=false

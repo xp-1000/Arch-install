@@ -1,0 +1,7 @@
+[Defaults]
+Profile=Par défaut
+
+[PROFILE_Par défaut]
+EmailClient[$e]=thunderbird
+ServerType=
+TerminalClient=false

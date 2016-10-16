@@ -1,0 +1,9 @@
+[autodisable]
+KeyboardActivityTimeoutMs=500
+
+[parameters]
+CircScrollDelta=5.73
+HorizScrollDelta=2.3
+MaxTapMove=3.6
+Tapping=true
+VertScrollDelta=2.3
