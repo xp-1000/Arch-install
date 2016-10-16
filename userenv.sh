@@ -8,5 +8,5 @@ passwd $1
 pacman -S --noconfirm sudo bash-completion
 sed -i 's/# %wheel ALL=(ALL) ALL/%wheel ALL=(ALL) ALL/' /etc/sudoers
 pacman -S --noconfirm xorg-server xorg-server-utils xorg-xinput xorg-xclock xorg-twm
-mv -f "`dirname $0`/files/xorg/*" /etc/X11/xorg.conf.d/
+cp -f "`dirname $0`/files/xorg/*" /etc/X11/xorg.conf.d/
 echo "You need to install right video driver manually"

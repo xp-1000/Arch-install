@@ -142,8 +142,8 @@ systemctl enable ntpd
 EOF
 
 # Copy default bashrc and profile files
-mv -f "`dirname $0`/files/bash.bashrc" /mnt/etc
-mv -f "`dirname $0`/files/profile" /mnt/etc
+cat "`dirname $0`/files/bash/bash.bashrc" >> /mnt/etc/bash.bashrc
+cp -f "`dirname $0`/files/bash/profile/*" /mnt/etc/profile.d/
  
 while ! ([[ "$wifi" == "y" ]] || [[ "$wifi" == "n" ]]); do
  read -p "Do you want install wifi support ? (y/n): " -e wifi

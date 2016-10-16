@@ -11,9 +11,9 @@ sudo sed -i 's/^CursorTheme=$/CursorTheme=breeze_cursors/' /etc/sddm.conf
 sudo sed -i 's/^Numlock=none$/Numlock=on/' /etc/sddm.conf
 yaourt -S --noconfirm firefox-kde-opensuse
 pacman -S --noconfirm firefox-i18n-fr
-mv -f "`dirname $0`/files/kde/autostart/*.desktop"  $HOME/.config/autostart/
-mv -f "`dirname $0`/files/kde/config/*"  $HOME/.config/
-mv -f "`dirname $0`/files/kde/kde4/share/config/*"  $HOME/.kde4/share/config/
+cp -f "`dirname $0`/files/kde/autostart/*.desktop"  $HOME/.config/autostart/
+cp -f "`dirname $0`/files/kde/config/*"  $HOME/.config/
+cp -f "`dirname $0`/files/kde/kde4/share/config/*"  $HOME/.kde4/share/config/
 mkdir ${HOME}/.compose-cache/
 ln -sfv /run/user/$UID/ /home/$USER/.compose-cache
 echo -e '\n[Windows]\nBorderlessMaximized=true' >> ${HOME}/.config/kwinrc
