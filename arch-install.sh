@@ -142,8 +142,10 @@ systemctl enable ntpd
 # end section sent to chroot
 EOF
 
-# Copy default bashrc and profile files
-cat "`dirname $0`/files/bash/bash.bashrc" >> /mnt/etc/bash.bashrc
+# Add default bashrc and profile files
+if ! grep -q '### Tweaks bashrc' /etc/bash.bashrc; then
+  cat "`dirname $0`/files/bash/bash.bashrc" >> /mnt/etc/bash.bashrc
+fi
 cp -f "`dirname $0`/files/bash/profile/*" /mnt/etc/profile.d/
  
 while ! ([[ "$wifi" == "y" ]] || [[ "$wifi" == "n" ]]); do
