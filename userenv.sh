@@ -13,12 +13,13 @@ fi
 useradd -m -G wheel -s /bin/bash $1
 echo "Please type your password"
 passwd $1
+pacman -S --noconfirm fontconfig
 pacman -S --noconfirm sudo powerline powerline-common powerline-fonts 
 sed -i 's/# %wheel ALL=(ALL) ALL/%wheel ALL=(ALL) ALL/' /etc/sudoers
 sed -i '/PS1=/d' /home/${1}/.bashrc
 sed -i '/alias ls/d' /home/${1}/.bashrc 
 if ! grep -q '# Powerline' /etc/bash.bashrc; then
-  cat <<EOF > /etc/bash.bashrc
+  cat <<EOF >> /etc/bash.bashrc
 # Powerline 
 export TERM='xterm-256color'
 export XDG_CONFIG_DIRS='/etc/conf.d'
@@ -41,5 +42,5 @@ cat <<EOF > /etc/conf.d/powerline/config.json
 }
 EOF
 pacman -S --noconfirm xorg-server xorg-server-utils xorg-xinput xorg-xclock xorg-twm
-cp -f "`dirname $0`/files/xorg/*" /etc/X11/xorg.conf.d/
+cp -f `dirname $0`/files/xorg/* /etc/X11/xorg.conf.d/
 echo "You need to install right video driver manually"
