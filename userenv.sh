@@ -13,13 +13,13 @@ fi
 useradd -m -G wheel -s /bin/bash $1
 echo "Please type your password"
 passwd $1
-pacman -S --noconfirm fontconfig
-pacman -S --noconfirm sudo powerline powerline-common powerline-fonts 
+pacman -S --noconfirm sudo fontconfig
+pacman -S --noconfirm powerline powerline-common powerline-fonts 
 sed -i 's/# %wheel ALL=(ALL) ALL/%wheel ALL=(ALL) ALL/' /etc/sudoers
 sed -i '/PS1=/d' /home/${1}/.bashrc
 sed -i '/alias ls/d' /home/${1}/.bashrc 
 if ! grep -q '# Powerline' /etc/bash.bashrc; then
-  cat <<EOF >> /etc/bash.bashrc
+  cat <<EOF > /etc/bash.bashrc
 # Powerline 
 export TERM='xterm-256color'
 export XDG_CONFIG_DIRS='/etc/conf.d'
@@ -31,7 +31,7 @@ if [ -f /usr/lib/python3.[5-9]/site-packages/powerline/bindings/bash/powerline.s
 fi
 EOF
 fi
-mkdir /etc/conf.d/powerline/
+mkdir -p /etc/conf.d/powerline/
 cat <<EOF > /etc/conf.d/powerline/config.json
 {
     "ext": {
