@@ -23,8 +23,6 @@ fdisk -l
 while [[ ! -b $device ]]; do
   read -p "Type your device path (e.g. /dev/sda): " -e device
 done
-uuid=$(blkid -o value -s UUID ${device}3)
-uuidSwap=$(blkid -o value -s UUID ${device}2)
 echo -e "\033[0;31m/!\ Warning : $device will be totally erased !\033[0m"
 while ! ([[ "$go" == "y" ]] || [[ "$go" == "n" ]]); do
  read -p "Are you sure to continue ? (y/n): " -e go
@@ -40,7 +38,6 @@ parted -s ${device} mkpart primary 0% 100m
 parted -s ${device} mkpart primary 100m ${endPart}m
 parted -s ${device} mkpart primary ${endPart}m 100%
 echo "OK"
-
 
 # make filesystems
 echo -n "Creating file system ... "
@@ -61,10 +58,13 @@ mount ${device}1 /mnt/boot
 swapon ${device}2
 echo "OK"
  
+uuid=$(blkid -o value -s UUID ${device}3)
+uuidSwap=$(blkid -o value -s UUID ${device}2)
+
 # rankmirrors to make this faster (though it takes a while)
 echo -n "Ranking repository mirrors ... "
-mv /etc/pacman.d/mirrorlist /etc/pacman.d/mirrorlist.orig
-rankmirrors -n 6 /etc/pacman.d/mirrorlist.orig >/etc/pacman.d/mirrorlist
+#mv /etc/pacman.d/mirrorlist /etc/pacman.d/mirrorlist.orig
+#rankmirrors -n 6 /etc/pacman.d/mirrorlist.orig >/etc/pacman.d/mirrorlist
 echo "OK"
 
 # Update database
@@ -112,10 +112,11 @@ echo "KEYMAP=fr-pc" > /etc/vconsole.conf
 mkinitcpio -p linux
  
 # install syslinux bootloader
+pacman -S --noconfirm gptfdisk
 syslinux-install_update -i -a -m 2> /dev/null
  
 # update syslinux config with correct root diskyaou				
-sed -i "s/root=.*/root=UUID=${uuid} resume=/dev/disk/by-uuid/${uuidSwap} rw" /boot/syslinux/syslinux.cfg
+sed -i "s/root=.*/root=UUID=${uuid} resume=UUID=${uuidSwap} rw/g" /boot/syslinux/syslinux.cfg
 
 #cp /usr/lib/syslinux/menu.c32 /boot/syslinux
 #cp /usr/lib/syslinux/hdt.c32 /boot/syslinux
@@ -124,14 +125,14 @@ sed -i "s/root=.*/root=UUID=${uuid} resume=/dev/disk/by-uuid/${uuidSwap} rw" /bo
 #extlinux --install /boot/syslinux
 
 # Set flag boot disk for GPT
-dd conv=notrunc bs=440 count=1 if=/usr/lib/syslinux/bios/gptmbr.bin of=${device}
+#dd conv=notrunc bs=440 count=1 if=/usr/lib/syslinux/bios/gptmbr.bin of=${device}
 
 # set root password to "root"
 echo root:azer | chpasswd
 
 # Set initial configuration
 echo -n "Quick basic configuration ... "
-ed -i -e 's/TIMEOUT 50/TIMEOUT 10/' /boot/syslinux/syslinux.cfg
+sed -i -e 's/TIMEOUT 50/TIMEOUT 10/' /boot/syslinux/syslinux.cfg
 echo -e '\n[archlinuxfr]\nSigLevel = Never\nServer = http://repo.archlinux.fr/$arch\n' >> /etc/pacman.conf
 pacman -Syu
 pacman -S vim yaourt pacman bash-completion --noconfirm
@@ -143,10 +144,10 @@ systemctl enable ntpd
 EOF
 
 # Add default bashrc and profile files
-if ! grep -q '### Tweaks bashrc' /etc/bash.bashrc; then
-  cat "`dirname $0`/files/bash/bash.bashrc" >> /mnt/etc/bash.bashrc
+if ! grep -q '### Tweaks bashrc' /mnt/etc/bash.bashrc; then
+  cat `dirname $0`/files/bash/bash.bashrc >> /mnt/etc/bash.bashrc
 fi
-cp -f "`dirname $0`/files/bash/profile/*" /mnt/etc/profile.d/
+cp -f `dirname $0`/files/bash/profile/* /mnt/etc/profile.d/
  
 while ! ([[ "$wifi" == "y" ]] || [[ "$wifi" == "n" ]]); do
  read -p "Do you want install wifi support ? (y/n): " -e wifi
