@@ -164,3 +164,5 @@ swapoff ${device}2
 sgdisk ${device} --attributes=:1:set:2
  
 echo "Done! Unmount the CD image from the VM, then type 'reboot'."
+echo -e "\033[0;31m/!\ Password for root authentification is 'azer'\033[0m"
+
