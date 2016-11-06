@@ -44,3 +44,5 @@ EOF
 pacman -S --noconfirm xorg-server xorg-server-utils xorg-xinput xorg-xclock xorg-twm
 cp -f `dirname $0`/files/xorg/* /etc/X11/xorg.conf.d/
 echo "You need to install right video driver manually"
+echo "Installing generic vesa driver"
+yaourt -S --noconfirm xf86-video-vesa
