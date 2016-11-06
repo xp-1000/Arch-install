@@ -16,6 +16,8 @@ sudo systemctl enable cups-browsed.service
 sudo sed -i 's/^Current=$/Current=breeze/' /etc/sddm.conf
 sudo sed -i 's/^CursorTheme=$/CursorTheme=breeze_cursors/' /etc/sddm.conf
 sudo sed -i 's/^Numlock=none$/Numlock=on/' /etc/sddm.conf
+sudo sed -i 's/^Session=/Session=plasma.desktop/' /etc/sddm.conf
+sudo sed -i "s/^User=/User=$1/" /etc/sddm.conf
 echo "Kde environment will be start on your display to generate stock configuration"
 echo "Type one key to continue when kde is run and user connected"
 sleep 3
@@ -56,7 +58,6 @@ sed -i 's/Switch to Next Desktop=none/Switch to Next Desktop=Ctrl+Alt+Right/' ${
 sed -i 's/Switch to Previous Desktop=none/Switch to Previous Desktop=Ctrl+Alt+Left/' ${HOME}/.config/kglobalshortcutsrc
 sed -i 's/Walk Through Windows (Reverse)=Alt+Shift+Backtab/Walk Through Windows (Reverse)=Alt+Shift+Tab/' ${HOME}/.config/kglobalshortcutsrc
 sudo systemctl restart sddm.service
-# autologin sddm
 # themes arc kde
 # shortcuts kde
 ## kdewallet for ssh key support
