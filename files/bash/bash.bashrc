@@ -118,15 +118,3 @@ man() {
     LESS_TERMCAP_us=$'\e[01;32m' \
     command man "$@"
 }
-
-# Powerline 
-#export TERM='xterm-256color'
-#export XDG_CONFIG_DIRS=/etc/powerline
-#if [ -f `which powerline-daemon` ]; then
-#if [ -f /usr/lib/python3.5/site-packages/powerline/bindings/bash/powerline.sh ]; then
-#  powerline-daemon -q
-#  POWERLINE_BASH_CONTINUATION=1
-#  POWERLINE_BASH_SELECT=1
-#  source /usr/lib/python3.5/site-packages/powerline/bindings/bash/powerline.sh
-#fi
-

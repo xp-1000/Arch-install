@@ -19,7 +19,7 @@ sed -i 's/# %wheel ALL=(ALL) ALL/%wheel ALL=(ALL) ALL/' /etc/sudoers
 sed -i '/PS1=/d' /home/${1}/.bashrc
 sed -i '/alias ls/d' /home/${1}/.bashrc 
 if ! grep -q '# Powerline' /etc/bash.bashrc; then
-  cat <<EOF > /etc/bash.bashrc
+  cat <<EOF >> /etc/bash.bashrc
 # Powerline 
 export TERM='xterm-256color'
 export XDG_CONFIG_DIRS='/etc/conf.d'
