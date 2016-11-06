@@ -133,7 +133,7 @@ echo root:azer | chpasswd
 # Set initial configuration
 echo -n "Quick basic configuration ... "
 sed -i -e 's/TIMEOUT 50/TIMEOUT 10/' /boot/syslinux/syslinux.cfg
-echo -e '\n[archlinuxfr]\nSigLevel = Never\nServer = http://repo.archlinux.fr/$arch\n' >> /etc/pacman.conf
+echo -e '\n[archlinuxfr]\nSigLevel = Never\nServer = http://repo.archlinux.fr/\$arch\n' >> /etc/pacman.conf
 pacman -Syu
 pacman -S vim yaourt pacman bash-completion --noconfirm
 pacman -S openssh ntp --noconfirm
