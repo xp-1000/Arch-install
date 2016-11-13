@@ -37,16 +37,17 @@ parted -s ${device} mktable gpt
 parted -s ${device} mkpart primary 0% 100m
 parted -s ${device} mkpart primary 100m ${endPart}m
 parted -s ${device} mkpart primary ${endPart}m 100%
+partprobe ${device}
 echo "OK"
 
 # make filesystems
 echo -n "Creating file system ... "
 # /boot
-mkfs.ext4 '-O ^64bit' ${device}1 > /dev/null 2>&1
+mkfs.ext4 -Fv '-O ^64bit' ${device}1 
 # swap
-mkswap ${device}2 > /dev/null 2>&1
+mkswap ${device}2 
 # /
-mkfs.ext4 ${device}3 > /dev/null 2>&1
+mkfs.ext4 -Fv ${device}3 
 echo "OK"
 
 # set up /mnt
