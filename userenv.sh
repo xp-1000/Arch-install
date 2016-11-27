@@ -2,6 +2,8 @@
 # This script take one argument : the username
 # This script should be run by root from the installed system
 # This script is interactive for user password catching
+set -e
+set -x
 if [[ $EUID -ne 0 ]]; then
    echo "This script must be run as root" 1>&2
    exit 1
@@ -13,7 +15,7 @@ fi
 useradd -m -G wheel -s /bin/bash $1
 echo "Please type your password"
 passwd $1
-pacman -S --noconfirm sudo fontconfig
+pacman -S --noconfirm sudo fontconfig wget unzip
 pacman -S --noconfirm powerline powerline-common powerline-fonts 
 sed -i 's/# %wheel ALL=(ALL) ALL/%wheel ALL=(ALL) ALL/' /etc/sudoers
 sed -i '/PS1=/d' /home/${1}/.bashrc

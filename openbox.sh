@@ -3,6 +3,7 @@
 set -e
 set -x
 sudo pacman --noconfirm -S openbox
+mkdir -p ${HOME}/.config/
 cp -r /etc/xdg/openbox ${HOME}/.config/
 echo "exec openbox-session" > ${HOME}/.xinitrc
 cat <<EOF >> /tmp/add.txt

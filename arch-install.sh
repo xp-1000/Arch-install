@@ -1,6 +1,7 @@
 #!/bin/bash
 # This script should be run after internet configuration from archlinux iso
 set -e
+set -x
 
 # confirm you can access the internet
 echo -n "Testing Internet connection ... "
