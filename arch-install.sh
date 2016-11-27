@@ -62,15 +62,23 @@ echo "OK"
 uuid=$(blkid -o value -s UUID ${device}3)
 uuidSwap=$(blkid -o value -s UUID ${device}2)
 
-# rankmirrors to make this faster (though it takes a while)
-echo -n "Ranking repository mirrors ... "
-#mv /etc/pacman.d/mirrorlist /etc/pacman.d/mirrorlist.orig
-#rankmirrors -n 6 /etc/pacman.d/mirrorlist.orig >/etc/pacman.d/mirrorlist
-echo "OK"
-
 # Update database
 echo "Updating repository database ... "
 pacman -Syy
+
+# rankmirrors to make this faster (though it takes a while)
+echo -n "Ranking repository mirrors ... "
+pacman -S --noconfirm pacman-mirrorlist
+Cnt="France"
+awk -v GG="$Cnt" '{if(match($0,GG) != "0")AA="1";if(AA == "1"){if( length($2) != "0"  )print substr($0,2) ;else AA="0"} }'  /etc/pacman.d/mirrorlist.pacnew > /etc/pacman.d/mirrorlist.new
+Cnt="Germany"
+awk -v GG="$Cnt" '{if(match($0,GG) != "0")AA="1";if(AA == "1"){if( length($2) != "0"  )print substr($0,2) ;else AA="0"} }'  /etc/pacman.d/mirrorlist.pacnew >> /etc/pacman.d/mirrorlist.new
+Cnt="Italy"
+awk -v GG="$Cnt" '{if(match($0,GG) != "0")AA="1";if(AA == "1"){if( length($2) != "0"  )print substr($0,2) ;else AA="0"} }'  /etc/pacman.d/mirrorlist.pacnew >> /etc/pacman.d/mirrorlist.new
+mv /etc/pacman.d/mirrorlist /etc/pacman.d/mirrorlist.orig
+rankmirrors -n 6 /etc/pacman.d/mirrorlist.new > /etc/pacman.d/mirrorlist
+echo "OK"
+
 # Install keys for archlinux packages
 pacman -S --noconfirm archlinux-keyring 
 
