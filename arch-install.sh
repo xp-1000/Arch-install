@@ -100,6 +100,7 @@ ln -sf /usr/share/zoneinfo/Europe/Paris /etc/localtime
  
 # set initial locale
 echo "fr_FR.UTF-8 UTF-8" >>/etc/locale.gen
+echo "en_US.UTF-8 UTF-8" >>/etc/locale.gen
 echo "fr_FR ISO-8859-1" >>/etc/locale.gen
 locale-gen
 #locale >/etc/locale.conf
@@ -136,7 +137,7 @@ echo -n "Quick basic configuration ... "
 sed -i -e 's/TIMEOUT 50/TIMEOUT 10/' /boot/syslinux/syslinux.cfg
 echo -e '\n[archlinuxfr]\nSigLevel = Never\nServer = http://repo.archlinux.fr/\$arch\n' >> /etc/pacman.conf
 pacman -Syu
-pacman -S vim yaourt pacman bash-completion --noconfirm
+pacman -S vim yaourt pacman bash-completion colordiff lsb-release --noconfirm
 pacman -S openssh ntp --noconfirm
 systemctl enable sshd
 systemctl enable ntpd
