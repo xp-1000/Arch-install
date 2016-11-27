@@ -5,6 +5,10 @@ set -e
 sudo pacman --noconfirm -S ttf-freefont ttf-dejavu ttf-liberation
 sudo pacman --noconfirm -S sakura samba
 sudo usermod -a -G audio,video,users,storage,disk,wheel $USER
+sed "s/USER/$USER/g" ./files/samba/smb.conf > /etc/samba/smb.conf
+sudo systemctl enable smbd
+sudo systemctl enable nmbd
+sudo systemctl enable dhcpcd
 #KODI
 sudo mkdir -p /etc/systemd/system/getty@tty1.service.d/
 sudo cat <<EOF | sudo tee /etc/systemd/system/getty@tty1.service.d/override.conf > /dev/null
@@ -33,4 +37,7 @@ sudo sed -e '/^#\[multilib\]/,+1 s/^#//g' /etc/pacman.conf
 sudo pacman -Syy
 sudo pacman --noconfirm -S steam steam-native-runtime pulseaudio wmctrl libxcb 
 sudo pacman --noconfirm -S lib32-openal lib32-nss lib32-gtk2 lib32-gtk3 lib32-libcanberra lib32-gconf lib32-dbus-glib lib32-libnm-glib lib32-libudev0-shim lib32-alsa-plugins lib32-libpulse lib32-libxcb lib32-curl
-sudo systemctl enable dhcpcd
+# KODI BACKUP RESTORE
+# CHROME
+# LIBRECINE CONFIG
+# TV KNET
