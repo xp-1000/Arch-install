@@ -4,7 +4,6 @@ set -x
 set -e
 sudo pacman --noconfirm -S ttf-freefont ttf-dejavu ttf-liberation
 sudo pacman --noconfirm -S sakura samba
-sudo usermod -a -G audio,video,users,storage,disk,wheel $USER
 sudo sed "s/USER/$USER/g" ./files/samba/smb.conf | sudo tee /etc/samba/smb.conf
 sudo systemctl enable smbd
 sudo systemctl enable nmbd
@@ -26,8 +25,7 @@ if [ -z "\$DISPLAY" ] && [ \$(tty) == /dev/tty1 ]; then
     startx
 fi
 EOF
-sudo pacman --noconfirm -S kodi 
-yaourt -S --noconfirm kodi-addon-pvr-iptvsimple-git
+sudo pacman --noconfirm -S kodi kodi-pvr-addons
 echo "kodi &" >> ${HOME}/.config/openbox/autostart 
 echo "sakura &" >> ${HOME}/.config/openbox/autostart 
 yaourt --noconfirm -S google-chrome

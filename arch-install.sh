@@ -106,6 +106,8 @@ echo "archlinux-$(date -I)" >/etc/hostname
  
 # set initial timezone to America/Los_Angeles
 ln -sf /usr/share/zoneinfo/Europe/Paris /etc/localtime
+# set hw clock on utc
+hwclock --systohc --utc
  
 # set initial locale
 echo "fr_FR.UTF-8 UTF-8" >>/etc/locale.gen
@@ -146,7 +148,8 @@ echo -n "Quick basic configuration ... "
 sed -i -e 's/TIMEOUT 50/TIMEOUT 10/' /boot/syslinux/syslinux.cfg
 echo -e '\n[archlinuxfr]\nSigLevel = Never\nServer = http://repo.archlinux.fr/\$arch\n' >> /etc/pacman.conf
 pacman -Syu
-pacman -S vim yaourt pacman bash-completion colordiff lsb-release --noconfirm
+pacman -S pacman --noconfirm
+pacman -S vim yaourt bash-completion colordiff lsb-release --noconfirm
 pacman -S openssh ntp --noconfirm
 systemctl enable sshd
 systemctl enable ntpd

@@ -2,6 +2,7 @@
 # This script should be run by unprivileged user from the installed system
 set -e
 set -x
+sudo usermod -a -G audio,video,users,storage,disk,power,wheel $USER
 sudo pacman --noconfirm -S openbox
 mkdir -p ${HOME}/.config/
 cp -r /etc/xdg/openbox ${HOME}/.config/
