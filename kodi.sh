@@ -29,6 +29,9 @@ sudo pacman --noconfirm -S kodi
 yaourt --noconfirm -S kodi-addon-pvr-iptvsimple-git
 echo "kodi &" >> ${HOME}/.config/openbox/autostart 
 echo "sakura &" >> ${HOME}/.config/openbox/autostart 
+sudo pacman --noconfirm -S firefox
+unzip `dirname $0`/files/ui/firefox.tar.gz -d ${HOME}
+echo "MOZ_DISABLE_GMP_SANDBOX=1 firefox" >> /etc/environment
 yaourt --noconfirm -S google-chrome
 sudo ln -sf /usr/bin/google-chrome-* /usr/bin/google-chrome
 sudo pacman --noconfirm -S python-xdg python2-xdg xdg-utils
