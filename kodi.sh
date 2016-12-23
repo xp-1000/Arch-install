@@ -4,7 +4,7 @@ set -x
 set -e
 sudo pacman --noconfirm -S ttf-freefont ttf-dejavu ttf-liberation
 sudo pacman --noconfirm -S sakura samba
-sudo sed "s/USER/$USER/g" ./files/samba/smb.conf | sudo tee /etc/samba/smb.conf
+sed "s/USER/$USER/g" ./files/samba/smb.conf | sudo tee /etc/samba/smb.conf
 sudo systemctl enable smbd
 sudo systemctl enable nmbd
 sudo systemctl enable dhcpcd
@@ -29,9 +29,9 @@ sudo pacman --noconfirm -S kodi
 yaourt --noconfirm -S kodi-addon-pvr-iptvsimple-git
 echo "kodi &" >> ${HOME}/.config/openbox/autostart 
 echo "sakura &" >> ${HOME}/.config/openbox/autostart 
-sudo pacman --noconfirm -S firefox
-unzip `dirname $0`/files/ui/firefox.tar.gz -d ${HOME}
-echo "MOZ_DISABLE_GMP_SANDBOX=1 firefox" >> /etc/environment
+sudo pacman --noconfirm -S firefox firefox-i18n-fr
+tar xvzf `dirname $0`/files/ui/firefox.tar.gz -C ${HOME}
+echo "MOZ_DISABLE_GMP_SANDBOX=1 firefox" | sudo tee /etc/environment
 yaourt --noconfirm -S google-chrome
 sudo ln -sf /usr/bin/google-chrome-* /usr/bin/google-chrome
 sudo pacman --noconfirm -S python-xdg python2-xdg xdg-utils
@@ -43,5 +43,5 @@ sudo pacman --noconfirm -S lib32-openal lib32-nss lib32-gtk2 lib32-gtk3 lib32-li
 wget http://tv.manfroi.fr/res/kodi-backup.zip -O /tmp/kodi-backup.zip
 rm -fr ${HOME}/.kodi
 unzip /tmp/kodi-backup.zip -d ${HOME}
-mkdir -p ${HOME}/{Vidéos/Séries,Vidéos/Films,Musique,Images}
-cd && wget "$(curl -s https://api.github.com/repos/scakemyer/plugin.video.quasar/releases | grep browser_download_url | grep linux_x64 | head -n 1 | cut -d '"' -f 4)"
+mkdir -p ${HOME}/{Videos/Series,Videos/Films,Musique,Images,Telechargements/Films,Telechargements/Series}
+#cd && wget "$(curl -s https://api.github.com/repos/scakemyer/plugin.video.quasar/releases | grep browser_download_url | grep linux_x64 | head -n 1 | cut -d '"' -f 4)"
