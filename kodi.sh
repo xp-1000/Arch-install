@@ -45,5 +45,8 @@ wget http://tv.manfroi.fr/res/kodi-kiwisbox.tar.gz -O /tmp/kodi-backup.tar.gz
 rm -fr ${HOME}/.kodi
 tar xvzf /tmp/kodi-backup.tar.gz -C ${HOME}
 mkdir -p ${HOME}/{Videos/Series,Videos/Films,Musique,Images/Wallpapers,Telechargements/Films,Telechargements/Series}
+set +e
 #cd && wget "$(curl -s https://api.github.com/repos/scakemyer/plugin.video.quasar/releases | grep browser_download_url | grep linux_x64 | head -n 1 | cut -d '"' -f 4)"
-i=0; for link in 'http://wallpapercave.com/wp/2RfDfMF.jpg' 'http://cdn.wallpapersafari.com/56/6/vKLDt6.jpg' 'http://i.imgur.com/TDiTtbA.jpg'; do wget $link -O ${HOME}/Images/Wallpapers/${i}.jpg; i=$((i+1)); done
+wget -r --accept "*.gif" --accept "*.jpg" http://tv.manfroi.fr/res/backgrounds
+mv tv.manfroi.fr/res/backgrounds/* ${HOME}/Images/Wallpapers/
+rm -fr tv.manfroi.fr
