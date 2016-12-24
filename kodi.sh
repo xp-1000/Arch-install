@@ -3,7 +3,7 @@
 set -x
 set -e
 sudo pacman --noconfirm -S ttf-freefont ttf-dejavu ttf-liberation
-sudo pacman --noconfirm -S sakura samba xarchiver pcmanfm zip p7zip unrar numlockx
+sudo pacman --noconfirm -S sakura samba xarchiver pcmanfm unzip zip p7zip unrar numlockx
 sed "s/USER/$USER/g" ./files/samba/smb.conf | sudo tee /etc/samba/smb.conf
 sudo systemctl enable smbd
 sudo systemctl enable nmbd
@@ -46,4 +46,4 @@ rm -fr ${HOME}/.kodi
 tar xvzf /tmp/kodi-backup.tar.gz -C ${HOME}
 mkdir -p ${HOME}/{Videos/Series,Videos/Films,Musique,Images/Wallpapers,Telechargements/Films,Telechargements/Series}
 #cd && wget "$(curl -s https://api.github.com/repos/scakemyer/plugin.video.quasar/releases | grep browser_download_url | grep linux_x64 | head -n 1 | cut -d '"' -f 4)"
-i=0; for link in 'http://wallpapercave.com/wp/2RfDfMF.jpg' 'http://cdn.wallpapersafari.com/56/6/vKLDt6.jpg' 'http://i.imgur.com/TDiTtbA.jpg'; do wget $link -O ${HOME}/Images/Wallpapers/$i.jpg; ((i++)); done
+i=0; for link in 'http://wallpapercave.com/wp/2RfDfMF.jpg' 'http://cdn.wallpapersafari.com/56/6/vKLDt6.jpg' 'http://i.imgur.com/TDiTtbA.jpg'; do wget $link -O ${HOME}/Images/Wallpapers/${i}.jpg; i=$((i+1)); done

@@ -15,7 +15,7 @@ fi
 useradd -m -G wheel -s /bin/bash $1
 echo "Please type your password"
 passwd $1
-pacman -S --noconfirm sudo fontconfig wget unzip
+pacman -S --noconfirm sudo fontconfig wget
 pacman -S --noconfirm powerline powerline-common powerline-fonts 
 sed -i 's/# %wheel ALL=(ALL) ALL/%wheel ALL=(ALL) ALL/' /etc/sudoers
 sed -i '/PS1=/d' /home/${1}/.bashrc
