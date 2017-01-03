@@ -66,17 +66,14 @@ uuidSwap=$(blkid -o value -s UUID ${device}2)
 # Update database
 echo "Updating repository database ... "
 pacman -Syy
+pacman -S wget unzip --noconfirm
 
 # rankmirrors to make this faster (though it takes a while)
 echo -n "Ranking repository mirrors ... "
 pacman -S --noconfirm pacman-mirrorlist
-Cnt="France"
-awk -v GG="$Cnt" '{if(match($0,GG) != "0")AA="1";if(AA == "1"){if( length($2) != "0"  )print substr($0,2) ;else AA="0"} }'  /etc/pacman.d/mirrorlist.pacnew > /etc/pacman.d/mirrorlist.new
-Cnt="Germany"
-awk -v GG="$Cnt" '{if(match($0,GG) != "0")AA="1";if(AA == "1"){if( length($2) != "0"  )print substr($0,2) ;else AA="0"} }'  /etc/pacman.d/mirrorlist.pacnew >> /etc/pacman.d/mirrorlist.new
-Cnt="Italy"
-awk -v GG="$Cnt" '{if(match($0,GG) != "0")AA="1";if(AA == "1"){if( length($2) != "0"  )print substr($0,2) ;else AA="0"} }'  /etc/pacman.d/mirrorlist.pacnew >> /etc/pacman.d/mirrorlist.new
-mv /etc/pacman.d/mirrorlist /etc/pacman.d/mirrorlist.orig
+cp -f /etc/pacman.d/mirrorlist /etc/pacman.d/mirrorlist.orig
+wget "https://www.archlinux.org/mirrorlist/?country=FR&country=DE&country=IT&protocol=http&ip_version=4" -O /etc/pacman.d/mirrorlist.new
+sed -i 's/^#Server/Server/' /etc/pacman.d/mirrorlist.new
 rankmirrors -n 6 /etc/pacman.d/mirrorlist.new > /etc/pacman.d/mirrorlist
 echo "OK"
 
