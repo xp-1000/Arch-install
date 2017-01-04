@@ -72,7 +72,7 @@ pacman -S wget unzip --noconfirm
 echo -n "Ranking repository mirrors ... "
 pacman -S --noconfirm pacman-mirrorlist
 cp -f /etc/pacman.d/mirrorlist /etc/pacman.d/mirrorlist.orig
-wget "https://www.archlinux.org/mirrorlist/?country=FR&country=DE&country=IT&protocol=http&ip_version=4" -O /etc/pacman.d/mirrorlist.new
+wget --no-check-certificate "https://www.archlinux.org/mirrorlist/?country=FR&country=DE&country=IT&protocol=http&ip_version=4" -O /etc/pacman.d/mirrorlist.new
 sed -i 's/^#Server/Server/' /etc/pacman.d/mirrorlist.new
 rankmirrors -n 6 /etc/pacman.d/mirrorlist.new > /etc/pacman.d/mirrorlist
 echo "OK"
