@@ -1,5 +1,6 @@
 #!/bin/bash
 # This script should be run by unprivileged user from the installed system
+# This script depends on 02-openbox.sh which should be run before.
 set -x
 set -e
 sudo pacman --noconfirm -S ttf-freefont ttf-dejavu ttf-liberation
