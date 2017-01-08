@@ -11,7 +11,7 @@ These scripts do not do complex tasks but this is above all an only place to fin
 
 Scripts were splitted according to their launch conditions :
 
-* 00-* : should be run from the official archlinux iso. So First, make usb and boot on it then get your desired script and run it.
+* 00-* : should be run from the official archlinux iso. (make and boot on usb then get this script and run it)
 * 01-* : should be run on a fresh installation by root user.
 * 02-* : should be run on a dresh installation by unprivileged user
 * 03-* : should be run on a dresh installation by unprivileged user after its 02 dependance(s)
