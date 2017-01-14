@@ -29,7 +29,6 @@ alias df='df -h'
 alias du='du -c -h'
 alias mkdir='mkdir -p -v'
 alias nano='nano -w'
-alias mount='mount | column -t'
 alias wget='wget -c'
 # }}}
 
