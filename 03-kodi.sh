@@ -4,7 +4,7 @@
 set -x
 set -e
 sudo pacman --noconfirm -S ttf-freefont ttf-dejavu ttf-liberation
-sudo pacman --noconfirm -S sakura samba xarchiver pcmanfm unzip zip p7zip unrar numlockx
+sudo pacman --noconfirm -S sakura samba xarchiver pcmanfm unzip zip p7zip unrar numlockx pavucontrol
 sed "s/USER/$USER/g" ./files/samba/smb.conf | sudo tee /etc/samba/smb.conf
 sudo systemctl enable smbd
 sudo systemctl enable nmbd
