@@ -3,6 +3,7 @@
 # This script depends on 02-openbox.sh which should be run before.
 set -x
 set -e
+sudo gpasswd -a ${USER} polkitd
 sudo pacman --noconfirm -S ttf-freefont ttf-dejavu ttf-liberation
 sudo pacman --noconfirm -S sakura samba xarchiver pcmanfm unzip zip p7zip unrar numlockx pavucontrol
 sed "s/USER/$USER/g" ./files/samba/smb.conf | sudo tee /etc/samba/smb.conf
