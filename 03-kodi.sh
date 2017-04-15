@@ -46,6 +46,9 @@ yaourt --noconfirm -S kodi-addon-pvr-iptvsimple-git
 cp -f `dirname $0`/files/openbox/dunstrc ${HOME}/.config/
 mkdir -p ${HOME}/.config/tint2
 cp -f `dirname $0`/files/openbox/tint2rc ${HOME}/.config/tint2/
+mkdir -p ${HOME}/.config/touchegg
+cp -f `dirname $0`/files/openbox/touchegg.conf ${HOME}/.config/touchegg/
+cp -f `dirname $0`/files/openbox/florencerc ${HOME}/.config/
 cp -f `dirname $0`/files/openbox/autostart ${HOME}/.config/openbox/autostart 
 sed -i 's/<number>4/<number>2/' ${HOME}/.config/openbox/rc.xml
 echo "MOZ_DISABLE_GMP_SANDBOX=1 firefox" | sudo tee /etc/environment
@@ -69,3 +72,10 @@ set +e
 wget -r --accept "*.gif" --accept "*.jpg" http://tv.manfroi.fr/res/backgrounds
 mv tv.manfroi.fr/res/backgrounds/* ${HOME}/Images/Wallpapers/
 rm -fr tv.manfroi.fr
+echo "Install finished !"
+echo "If you want touchscreen support install following packages :"
+echo "yaourt -S --noconfirm firefox-nightly-fr firefox-nightly touchegg touchegg-gce-git"
+echo "And uncomment touchegg in .config/openbox/autostart"
+echo "If you want a virtual keyboard, install following package :"
+echo "yaourt -S florence"
+echo "And uncomment florence in .config/openbox/autostart"

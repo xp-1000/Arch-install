@@ -142,6 +142,7 @@ launcher_item_app = /usr/share/applications/firefox.desktop
 launcher_item_app = /usr/share/applications/iceweasel.desktop
 launcher_item_app = /usr/share/applications/chromium-browser.desktop
 launcher_item_app = /usr/share/applications/google-chrome.desktop
+launcher_item_app = /usr/share/applications/kodi.desktop
 launcher_item_app = /usr/share/applications/pavucontrol.desktop
 
 #-------------------------------------
