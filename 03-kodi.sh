@@ -48,11 +48,11 @@ mkdir -p ${HOME}/.config/tint2
 cp -f `dirname $0`/files/openbox/tint2rc ${HOME}/.config/tint2/
 cp -f `dirname $0`/files/openbox/autostart ${HOME}/.config/openbox/autostart 
 sed -i 's/<number>4/<number>2/' ${HOME}/.config/openbox/rc.xml
-sudo pacman --noconfirm -S firefox firefox-i18n-fr
-tar xvzf `dirname $0`/files/ui/firefox.tar.gz -C ${HOME}
 echo "MOZ_DISABLE_GMP_SANDBOX=1 firefox" | sudo tee /etc/environment
 yaourt --noconfirm -S google-chrome
 sudo ln -sf /usr/bin/google-chrome-* /usr/bin/google-chrome
+sudo pacman --noconfirm -S firefox firefox-i18n-fr
+tar xvzf `dirname $0`/files/ui/firefox.tar.gz -C ${HOME}
 sudo pacman --noconfirm -S python-xdg python2-xdg xdg-utils
 #STEAM
 sudo sed -ie '/^#\[multilib\]/,+1 s/^#//g' /etc/pacman.conf
