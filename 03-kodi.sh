@@ -43,16 +43,10 @@ fi
 EOF
 sudo pacman --noconfirm -S kodi
 yaourt --noconfirm -S kodi-addon-pvr-iptvsimple-git
-cp -f cp -f `dirname $0`/files/openbox/dunstrc ${HOME}/.config/
+cp -f `dirname $0`/files/openbox/dunstrc ${HOME}/.config/
 mkdir -p ${HOME}/.config/tint2
-cp -f cp -f `dirname $0`/files/openbox/tint2rc ${HOME}/.config/tint2/
-echo "kodi &" >> ${HOME}/.config/openbox/autostart 
-echo "numlockx &" >> ${HOME}/.config/openbox/autostart 
-echo "dunst &" >> ${HOME}/.config/openbox/autostart 
-echo "tint2 &" >> ${HOME}/.config/openbox/autostart 
-echo "nm-applet &" >> ${HOME}/.config/openbox/autostart 
-echo "volumeicon &" >> ${HOME}/.config/openbox/autostart 
-echo "cbatticon &" >> ${HOME}/.config/openbox/autostart 
+cp -f `dirname $0`/files/openbox/tint2rc ${HOME}/.config/tint2/
+cp -f `dirname $0`/files/openbox/autostart ${HOME}/.config/openbox/autostart 
 sed -i 's/<number>4/<number>2/' ${HOME}/.config/openbox/rc.xml
 sudo pacman --noconfirm -S firefox firefox-i18n-fr
 tar xvzf `dirname $0`/files/ui/firefox.tar.gz -C ${HOME}
