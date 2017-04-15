@@ -3,7 +3,7 @@
 set -e
 set -x
 sudo usermod -a -G audio,video,users,storage,disk,power,wheel $USER
-sudo pacman --noconfirm -S openbox gmrun xkill
+sudo pacman --noconfirm -S openbox gmrun
 yaourt -S libaosd --noconfirm
 sudo cp -f `dirname $0`/files/openbox/osd-mixer.sh /usr/local/bin/
 sudo cp -f `dirname $0`/files/openbox/restart-openbox.sh /usr/local/bin/

@@ -1,22 +1,47 @@
 #!/bin/bash
+set -x
+function updown {
+   volsum=0;
+   volcount=0;
+   for string in $OUTPUT; do 
+     if [[ $string =~ ([[:digit:]]+)% ]]; then 
+       let volsum+=${BASH_REMATCH[1]};
+       let volcount+=1;
+     fi   
+   done
+   vol=$((volsum / volcount))
+   A="VOLUME: $vol" 
+}
 
+function status {
+  if echo $OUTPUT | grep -q off; then
+    MUTESTATUS="MUTTED"
+  else
+    MUTESTATUS="UNMUTTED"
+  fi
+}
+ 
 case $1 in
-
-   volup) A="VOLUME: $(amixer -D pulse sset Master 5%+ unmute | grep -E ":[[:space:]]+Playback[[:space:]]+[[:digit:]]+[[:space:]]+\[[[:digit:]]{1,3}%\][[:space:]]+\[o[[:alpha:]]{1,2}\]" | tr -d '[]%' | awk '{SUM += $5} END {print SUM/NR"%"}')" ;;
-   voldown) A="VOLUME: $(amixer -D pulse sset Master 5%- unmute | grep -E ":[[:space:]]+Playback[[:space:]]+[[:digit:]]+[[:space:]]+\[[[:digit:]]{1,3}%\][[:space:]]+\[o[[:alpha:]]{1,2}\]" | tr -d '[]%' | awk '{SUM += $5} END {print SUM/NR"%"}')" ;;
-   mute)
-      case $(amixer -D pulse sset Master toggle | grep -E ":[[:space:]]+Playback[[:space:]]+[[:digit:]]+[[:space:]]+\[[[:digit:]]{1,3}%\][[:space:]]+\[o[[:alpha:]]{1,2}\]" | tail -n 1 | awk '{print $6}' | tr -d '[]') in
-            on) A="UNMUTED" ;;
-            off) A="MUTED" ;;
-      esac ;;
-
-   *) echo "Usage: $0 { volup | voldown | mute }" ;;
+  volup) 
+    OUTPUT=$(amixer sset Master 5%+ unmute)
+    updown
+    echo $A;;
+  voldown)
+    OUTPUT=$(amixer sset Master 5%- unmute)
+    updown
+    echo $A;;
+  mute)
+    OUTPUT=$(amixer sset Master toggle)
+    status
+    A="${MUTESTATUS}";;
+  *) echo "Usage: $0 { volup | voldown | mute }" ;;
 
 esac
 
-MUTESTATUS=$(amixer -D pulse get Master | grep -E ":[[:space:]]+Playback[[:space:]]+[[:digit:]]+[[:space:]]+\[[[:digit:]]{1,3}%\][[:space:]]+\[o[[:alpha:]]{1,2}\]" | tail -n 1 | awk '{print $6}' | tr -d '[]')
+OUTPUT=$(amixer get Master)
+status
 
-if [ $MUTESTATUS == "off" ]; then
+if [ $MUTESTATUS == "MUTTED" ]; then
    OSDCOLOR=red; else
    OSDCOLOR=yellow
 fi
