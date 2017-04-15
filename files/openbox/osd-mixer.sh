@@ -10,14 +10,14 @@ function updown {
      fi   
    done
    vol=$((volsum / volcount))
-   A="VOLUME: $vol" 
+   MESSAGE="LEVEL: ${vol}%" 
 }
 
 function status {
   if echo $OUTPUT | grep -q off; then
-    MUTESTATUS="MUTTED"
+    MESSAGE="STATUS: MUTTED"
   else
-    MUTESTATUS="UNMUTTED"
+    MESSAGE="STATUS: UNMUTTED"
   fi
 }
  
@@ -25,29 +25,34 @@ case $1 in
   volup) 
     OUTPUT=$(amixer sset Master 5%+ unmute)
     updown
-    echo $A;;
+    ACTION="Volume up"
+    ;;
   voldown)
     OUTPUT=$(amixer sset Master 5%- unmute)
     updown
-    echo $A;;
+    ACTION="Volume down"
+    ;;
   mute)
     OUTPUT=$(amixer sset Master toggle)
     status
-    A="${MUTESTATUS}";;
+    ACTION="Volume change"
+    ;;
   *) echo "Usage: $0 { volup | voldown | mute }" ;;
 
 esac
 
-OUTPUT=$(amixer get Master)
-status
+#OUTPUT=$(amixer get Master)
+#status
 
-if [ $MUTESTATUS == "MUTTED" ]; then
-   OSDCOLOR=red; else
-   OSDCOLOR=yellow
-fi
-echo $OSDCOLOR
-echo $MUTESTATUS
+#if [ $MUTESTATUS == "MUTTED" ]; then
+#   OSDCOLOR=red; else
+#   OSDCOLOR=yellow
+#fi
+#echo $OSDCOLOR
+#echo $MUTESTATUS
 
-killall aosd_cat &> /dev/null
+#killall aosd_cat &> /dev/null
 
-echo "$A" | aosd_cat --fore-color=$OSDCOLOR --font="bitstream bold 20" -p 7 --x-offset=-10 --y-offset=-30 --transparency=1 --fade-full=2500 -f 0 -o 300
+#echo "$A" | aosd_cat --fore-color=$OSDCOLOR --font="bitstream bold 20" -p 7 --x-offset=-10 --y-offset=-30 --transparency=1 --fade-full=2500 -f 0 -o 300
+
+notify-send -t 1 -a Pulseaudio -u low "$ACTION" "$MESSAGE"
