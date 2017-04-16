@@ -49,9 +49,7 @@ cp -f `dirname $0`/files/openbox/*tint2rc ${HOME}/.config/tint2/
 mkdir -p ${HOME}/.config/touchegg
 cp -f `dirname $0`/files/openbox/touchegg.conf ${HOME}/.config/touchegg/
 cp -f `dirname $0`/files/openbox/florencerc ${HOME}/.config/
-cp -f `dirname $0`/files/openbox/autostart ${HOME}/.config/openbox/autostart 
-sed -i 's/<number>4/<number>2/' ${HOME}/.config/openbox/rc.xml
-echo "MOZ_DISABLE_GMP_SANDBOX=1 firefox" | sudo tee /etc/environment
+#echo "MOZ_DISABLE_GMP_SANDBOX=1 firefox" | sudo tee /etc/environment
 yaourt --noconfirm -S google-chrome
 sudo ln -sf /usr/bin/google-chrome-* /usr/bin/google-chrome
 sudo pacman --noconfirm -S firefox firefox-i18n-fr
