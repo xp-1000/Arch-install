@@ -45,7 +45,7 @@ sudo pacman --noconfirm -S kodi
 yaourt --noconfirm -S kodi-addon-pvr-iptvsimple-git
 cp -f `dirname $0`/files/openbox/dunstrc ${HOME}/.config/
 mkdir -p ${HOME}/.config/tint2
-cp -f `dirname $0`/files/openbox/tint2rc ${HOME}/.config/tint2/
+cp -f `dirname $0`/files/openbox/*tint2rc ${HOME}/.config/tint2/
 mkdir -p ${HOME}/.config/touchegg
 cp -f `dirname $0`/files/openbox/touchegg.conf ${HOME}/.config/touchegg/
 cp -f `dirname $0`/files/openbox/florencerc ${HOME}/.config/

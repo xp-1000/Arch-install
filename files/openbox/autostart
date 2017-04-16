@@ -1,6 +1,6 @@
 numlockx &
 dunst &
-tint2 &
+tint2 ${HOME}/.config/tint2/icon_only_1.tint2rc &
 nm-applet &
 volumeicon &
 cbatticon -n -c "bash -c 'notify-send -a Battery -u critical \"Suspend system\" \"Battery level critical\" && sleep 5 && sudo systemctl start systemd-suspend.service'" -r 5 -l 10 &
