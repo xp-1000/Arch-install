@@ -43,7 +43,7 @@ cat <<EOF > /etc/conf.d/powerline/config.json
     }
 }
 EOF
-pacman -S --noconfirm xorg-server xorg-server-utils xorg-xinput xorg-xclock xorg-twm xorg-xinit xf86-video-fbdev alsa-utils
+pacman -S --noconfirm xorg-server xorg-server-common xorg-xinput xorg-xclock xorg-twm xorg-xinit xf86-video-fbdev alsa-utils
 cp -f `dirname $0`/files/xorg/* /etc/X11/xorg.conf.d/
 echo "You need to install right video driver manually"
 #echo "Installing generic vesa driver"

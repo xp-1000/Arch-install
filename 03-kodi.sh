@@ -9,7 +9,6 @@ sudo pacman --noconfirm -S sakura samba xarchiver pcmanfm unzip zip p7zip unrar 
 sudo pacman --noconfirm -S tint2 networkmanager network-manager-applet gnome-keyring adwaita-icon-theme dunst
 # Volume support 
 sudo pacman --noconfirm -S pulseaudio pulseaudio-alsa volumeicon
-pulseaudio --start
 # xkill
 sudo pacman --noconfirm -S xorg-xkill
 # Battery
@@ -67,9 +66,9 @@ tar xvzf /tmp/kodi-backup.tar.gz -C ${HOME}
 mkdir -p ${HOME}/{Videos/Series,Videos/Films,Musique,Images/Wallpapers,Téléchargements/Films,Téléchargements/Series,Documents/Sauvegarde}
 set +e
 #cd && wget "$(curl -s https://api.github.com/repos/scakemyer/plugin.video.quasar/releases | grep browser_download_url | grep linux_x64 | head -n 1 | cut -d '"' -f 4)"
-wget -r --accept "*.gif" --accept "*.jpg" http://tv.manfroi.fr/res/backgrounds
-mv tv.manfroi.fr/res/backgrounds/* ${HOME}/Images/Wallpapers/
-rm -fr tv.manfroi.fr
+#wget -r --accept "*.gif" --accept "*.jpg" http://tv.manfroi.fr/res/backgrounds
+#mv tv.manfroi.fr/res/backgrounds/* ${HOME}/Images/Wallpapers/
+#rm -fr tv.manfroi.fr
 echo "Install finished !"
 echo "If you want touchscreen support install following packages :"
 echo "yaourt -S --noconfirm firefox-nightly-fr firefox-nightly touchegg touchegg-gce-git"
