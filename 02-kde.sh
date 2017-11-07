@@ -7,8 +7,8 @@ if [[ $EUID -eq 0 ]]; then
    exit 1
 fi
 yaourt -S --noconfirm plasma kdebase kde-l10n-fr 
-yaourt -S --noconfirm yakuake phonon-qt4-vlc phonon-qt5-vlc kscreen hunspell-fr spectacle kdegraphics-okular breeze-gtk ark
-yaourt -Rsn --noconfirm kdebase-konqueror kdebase-konq-plugins kate 
+yaourt -S --noconfirm yakuake phonon-qt4-vlc phonon-qt5-vlc kscreen hunspell-fr spectacle okular breeze-gtk ark
+yaourt -Rsn --noconfirm konqueror kate 
 yaourt -S --noconfirm ttf-freefont ttf-dejavu ttf-liberation networkmanager atom cups print-manager
 sudo systemctl enable sddm.service
 sudo systemctl enable NetworkManager.service
