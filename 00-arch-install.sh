@@ -6,19 +6,15 @@ set -x
 # confirm you can access the internet
 echo -n "Testing Internet connection ... "
 ping -q -w 1 -c 1 google.fr > /dev/null && echo "OK" || (echo "Your Internet seems broken. Press Ctrl-C to abort or enter to continue." && read)
-# if [[ ! $(curl -Is http://www.google.com/ | head -n 1) =~ "200 OK" ]]; then
-	# echo "Your Internet seems broken. Press Ctrl-C to abort or enter to continue."
-	# read
-# fi
 
-# Get total memory to define swap partition sizing 
+# Get total memory to define swap file sizing 
 memSize=$(free|awk '/^Mem:/{print $2}')
 memSwap=$(echo $memSize | sed -e "s/M//")
 if [[ $memSwap -ge 4096 ]]
 then 
-	memSwap=4096
+  memSwap=4096
 fi
-endPart=$((memSwap+100))
+
 device=
 fdisk -l
 while [[ ! -b $device ]]; do
@@ -31,42 +27,40 @@ done
 if [[ $go == "n" ]]; then
   exit 1
 fi
+
+suffix=""
+if [[ "${device}" == *"nvme"* ]];
+  then suffix="p"
+fi
  
-# make 2 partitions on the disk.
+# make partitions on the disk.
 echo -n "Partitioning ... "
 parted -s ${device} mktable gpt
-parted -s ${device} mkpart primary 0% 100m
-parted -s ${device} mkpart primary 100m ${endPart}m
-parted -s ${device} mkpart primary ${endPart}m 100%
+parted -s ${device} mkpart primary 0% 500m
+parted -s ${device} mkpart primary 500m 100%
 partprobe ${device}
 echo "OK"
 
 # make filesystems
 echo -n "Creating file system ... "
 # /boot
-mkfs.ext4 -Fv '-O ^64bit' ${device}1 
-# swap
-mkswap ${device}2 
+mkfs.ext4 -Fv '-O ^64bit' ${device}${suffix}1
 # /
-mkfs.ext4 -Fv ${device}3 
+mkfs.ext4 -Fv ${device}${suffix}2
 echo "OK"
 
 # set up /mnt
 echo -n "Mounting partitions ... "
-mount ${device}3 /mnt
+mount ${device}${suffix}2 /mnt
 mkdir /mnt/boot
-mount ${device}1 /mnt/boot
-# set up swap
-swapon ${device}2
+mount ${device}${suffix}1 /mnt/boot
+uuid=$(blkid -o value -s UUID ${device}${suffix}2)
 echo "OK"
- 
-uuid=$(blkid -o value -s UUID ${device}3)
-uuidSwap=$(blkid -o value -s UUID ${device}2)
 
 # Update database
 echo "Updating repository database ... "
 pacman -Syy
-pacman -S wget unzip --noconfirm
+pacman -S wget unzip pacman-contrib --noconfirm
 
 # rankmirrors to make this faster (though it takes a while)
 echo -n "Ranking repository mirrors ... "
@@ -98,6 +92,12 @@ genfstab -p -U /mnt >> /mnt/etc/fstab
 # chroot
 arch-chroot /mnt /bin/bash <<EOF
  
+# set up swap
+fallocate -l ${memSwap}M /swapfile
+chmod 600 /swapfile
+uuidSwap=$(mkswap /swapfile | grep UUID | cut -d '=' -f 2)
+echo -e "# Swap\nUUID=${uuidSwap}\tnone\t\tswap\t\tdefaults\t0 0" >> /etc/fstab
+
 # set initial hostname
 echo "archlinux-$(date -I)" >/etc/hostname
  
@@ -123,6 +123,7 @@ mkinitcpio -p linux
  
 # install syslinux bootloader
 pacman -S --noconfirm gptfdisk
+# TODO install linux for EFI : https://wiki.archlinux.org/index.php/Syslinux#UEFI_Systems
 syslinux-install_update -i -a -m 2> /dev/null
  
 # update syslinux config with correct root diskyaou				
@@ -146,7 +147,9 @@ sed -i -e 's/TIMEOUT 50/TIMEOUT 10/' /boot/syslinux/syslinux.cfg
 echo -e '\n[archlinuxfr]\nSigLevel = Never\nServer = http://repo.archlinux.fr/\$arch\n' >> /etc/pacman.conf
 pacman -Syu
 pacman -S pacman --noconfirm
-pacman -S vim yaourt bash-completion colordiff lsb-release --noconfirm
+pacman -S vim bash-completion colordiff lsb-release --noconfirm
+# TODO: install yaourt from PKGBUILD
+#pacman -S yaourt --noconfirm
 pacman -S openssh ntp --noconfirm
 systemctl enable sshd
 systemctl enable ntpd
@@ -168,8 +171,8 @@ if [[ $wifi == "y" ]]; then
 fi
  
 # unmount
+swapoff /mnt/swapfile
 umount /mnt/{boot,}
-swapoff ${device}2
 
 # Set Flag boot BIOS for GTP
 sgdisk ${device} --attributes=:1:set:2
