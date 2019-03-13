@@ -78,11 +78,6 @@ echo "Installing ArchLinux ... "
 # install base packages (take a coffee break if you have slow internet)
 pacstrap /mnt base base-devel
  
-# install syslinux
-#arch-chroot /mnt pacman -S syslinux --noconfirm
-echo "Installing Syslinux bootloader ... "
-pacstrap /mnt syslinux
- 
 # copy ranked mirrorlist over
 cp /etc/pacman.d/mirrorlist* /mnt/etc/pacman.d
  
@@ -122,21 +117,13 @@ echo "KEYMAP=fr-pc" > /etc/vconsole.conf
 mkinitcpio -p linux
  
 # install syslinux bootloader
-pacman -S --noconfirm gptfdisk
-# TODO install linux for EFI : https://wiki.archlinux.org/index.php/Syslinux#UEFI_Systems
-syslinux-install_update -i -a -m 2> /dev/null
- 
-# update syslinux config with correct root diskyaou				
-sed -i "s/root=.*/root=UUID=${uuid} resume=UUID=${uuidSwap} rw/g" /boot/syslinux/syslinux.cfg
-
-#cp /usr/lib/syslinux/menu.c32 /boot/syslinux
-#cp /usr/lib/syslinux/hdt.c32 /boot/syslinux
-#cp /usr/lib/syslinux/reboot.c32 /boot/syslinux
-#cp /usr/lib/syslinux/poweroff.com /boot/syslinux
-#extlinux --install /boot/syslinux
-
-# Set flag boot disk for GPT
-#dd conv=notrunc bs=440 count=1 if=/usr/lib/syslinux/bios/gptmbr.bin of=${device}
+pacman -S syslinux efibootmgr gptfdisk
+mkdir -p /boot/EFI/syslinux
+cp -r /usr/lib/syslinux/efi64/* /boot/EFI/syslinux
+efibootmgr --create --disk ${device} --part ${suffix}1 --loader /EFI/syslinux/syslinux.efi --label "Syslinux" --verbose
+mv /boot/syslinux/syslinux.cfg /boot/EFI/syslinux/
+# update syslinux config with correct root disk
+sed -i "s/root=.*/root=UUID=${uuid} resume=UUID=${uuidSwap} rw/g" /boot/EFI/syslinux/syslinux.cfg
 
 # set root password to "root"
 echo root:azer | chpasswd
