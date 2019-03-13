@@ -120,7 +120,7 @@ mkinitcpio -p linux
 pacman -S syslinux efibootmgr gptfdisk
 mkdir -p /boot/EFI/syslinux
 cp -r /usr/lib/syslinux/efi64/* /boot/EFI/syslinux
-efibootmgr --create --disk ${device} --part ${suffix}1 --loader /EFI/syslinux/syslinux.efi --label "Syslinux" --verbose
+efibootmgr --create --disk ${device} --part 1 --loader /EFI/syslinux/syslinux.efi --label "Syslinux" --verbose
 mv /boot/syslinux/syslinux.cfg /boot/EFI/syslinux/
 # update syslinux config with correct root disk
 sed -i "s/root=.*/root=UUID=${uuid} resume=UUID=${uuidSwap} rw/g" /boot/EFI/syslinux/syslinux.cfg
