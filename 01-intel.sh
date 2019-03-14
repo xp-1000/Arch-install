@@ -1,4 +1,4 @@
 #!/bin/bash
-set -e
-set -x
+set -uxo pipefail
+
 pacman --noconfirm -S mesa xf86-video-intel vulkan-intel libva-intel-driver libvdpau-va-gl vdpauinfo

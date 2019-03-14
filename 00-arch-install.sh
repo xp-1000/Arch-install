@@ -1,7 +1,6 @@
 #!/bin/bash
 # This script should be run after internet configuration from archlinux iso
-set -e
-set -x
+set -euo pipefail
 
 # confirm you can access the internet
 echo -n "Testing Internet connection ... "
@@ -15,12 +14,21 @@ then
   memSwap=4096
 fi
 
+# microcode management
+manufacturer=""
+if lscpu | grep -qi intel; then
+  manufacturer="intel"
+elif lscpu | grep -qi amd; then
+  manufacturer="amd"
+fi
+
 device=
 fdisk -l | grep '^Disk[[:space:]]*/' | grep -v loop
 while [[ ! -b $device ]]; do
   read -p "Type your device path (e.g. /dev/sda): " -e device
 done
 echo -e "\033[0;31m/!\ Warning : $device will be totally erased !\033[0m"
+go=""
 while ! ([[ "$go" == "y" ]] || [[ "$go" == "n" ]]); do
  read -p "Are you sure to continue ? (y/n): " -e go
 done
@@ -130,12 +138,6 @@ initrd  /initramfs-linux.img
 options root=UUID=${uuid} rw
 EOC
 
-# microcode management
-if lscpu | grep -qi intel; then
-  manufacturer="intel"
-elif lscpu | grep -qi amd; then
-  manufacturer="amd"
-fi
 if ! [ -z ${manufacturer} ]; then
   pacman -S ${manufacturer}-ucode --noconfirm
   sed -i "/^linux.*\/vm/a initrd  /${manufacturer}-ucode.img" /boot/loader/entries/arch.conf
@@ -169,6 +171,7 @@ if ! grep -q '" vim custom config' /mnt/etc/vimrc; then
 fi
 cp -f `dirname $0`/files/bash/profile/* /mnt/etc/profile.d/
  
+wifi=""
 while ! ([[ "$wifi" == "y" ]] || [[ "$wifi" == "n" ]]); do
  read -p "Do you want install wifi support ? (y/n): " -e wifi
 done

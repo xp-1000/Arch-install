@@ -54,5 +54,5 @@ let g:lightline = {
       \ }
 
 set splitright
-" colorscheme ron
-colorscheme iceberg
+colorscheme ron
+" colorscheme iceberg

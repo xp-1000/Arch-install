@@ -1,0 +1,8 @@
+[branch]
+        autoSetupRebase = always
+[pull]
+        rebase = preserve
+[rerere]
+        enabled = true
+[color]
+        ui = auto
