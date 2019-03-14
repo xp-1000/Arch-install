@@ -74,9 +74,7 @@ pacman -S wget unzip pacman-contrib --noconfirm
 echo -n "Ranking repository mirrors ... "
 pacman -S --noconfirm pacman-mirrorlist
 cp -f /etc/pacman.d/mirrorlist /etc/pacman.d/mirrorlist.orig
-wget --no-check-certificate "https://www.archlinux.org/mirrorlist/?country=FR&country=DE&country=IT&protocol=http&ip_version=4" -O /etc/pacman.d/mirrorlist.new
-sed -i 's/^#Server/Server/' /etc/pacman.d/mirrorlist.new
-rankmirrors -n 6 /etc/pacman.d/mirrorlist.new > /etc/pacman.d/mirrorlist
+curl -s "https://www.archlinux.org/mirrorlist/?country=FR&country=DE&country=IT&country=GB&protocol=https&use_mirror_status=on" | sed -e 's/^#Server/Server/' -e '/^#/d' | rankmirrors -n 6 - > /etc/pacman.d/mirrorlist
 echo "OK"
 
 # Install keys for archlinux packages
@@ -154,7 +152,7 @@ echo -n "Quick basic configuration ... "
 echo -e '\n[archlinuxfr]\nSigLevel = Never\nServer = http://repo.archlinux.fr/\$arch\n' >> /etc/pacman.conf
 pacman -Syu
 pacman -S pacman --noconfirm
-pacman -S vim bash-completion colordiff lsb-release --noconfirm
+pacman -S vim bash-completion colordiff lsb-release pacman-contrib --noconfirm
 pacman -S openssh ntp --noconfirm
 systemctl enable sshd
 systemctl enable ntpd
