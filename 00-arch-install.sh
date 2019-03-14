@@ -16,7 +16,7 @@ then
 fi
 
 device=
-fdisk -l
+fdisk -l | grep '^Disk[[:space:]]*/' | grep -v loop
 while [[ ! -b $device ]]; do
   read -p "Type your device path (e.g. /dev/sda): " -e device
 done
@@ -33,28 +33,36 @@ if [[ "${device}" == *"nvme"* ]];
   then suffix="p"
 fi
  
+# erase disk
+echo -n "Erase disk ... "
+sgdisk --zap-all ${device}
+echo "OK"
 # make partitions on the disk.
 echo -n "Partitioning ... "
-parted -s ${device} mktable gpt
-parted -s ${device} mkpart primary 0% 500m
-parted -s ${device} mkpart primary 500m 100%
+sgdisk --new=0:0:+512MiB ${device}
+sgdisk --change-name=1:ESP ${device}
+sgdisk --typecode=1:EF00 ${device}
+sgdisk --new=0:0:0 ${device}
+sgdisk --change-name=2:SYSTEM ${device}
+sgdisk --typecode=2:8300 ${device}
 partprobe ${device}
 echo "OK"
 
 # make filesystems
 echo -n "Creating file system ... "
 # /boot
-mkfs.ext4 -Fv '-O ^64bit' ${device}${suffix}1
+mkfs.fat -F32 ${device}${suffix}1
 # /
 mkfs.ext4 -Fv ${device}${suffix}2
 echo "OK"
+
+uuid=$(blkid -o value -s UUID ${device}${suffix}2)
 
 # set up /mnt
 echo -n "Mounting partitions ... "
 mount ${device}${suffix}2 /mnt
 mkdir /mnt/boot
 mount ${device}${suffix}1 /mnt/boot
-uuid=$(blkid -o value -s UUID ${device}${suffix}2)
 echo "OK"
 
 # Update database
@@ -90,8 +98,8 @@ arch-chroot /mnt /bin/bash <<EOF
 # set up swap
 fallocate -l ${memSwap}M /swapfile
 chmod 600 /swapfile
-uuidSwap=$(mkswap /swapfile | grep UUID | cut -d '=' -f 2)
-echo -e "# Swap\nUUID=${uuidSwap}\tnone\t\tswap\t\tdefaults\t0 0" >> /etc/fstab
+mkswap /swapfile
+echo -e "# Swap\n/swapfile\t\tnone\t\tswap\t\tdefaults\t0 0" >> /etc/fstab
 
 # set initial hostname
 echo "archlinux-$(date -I)" >/etc/hostname
@@ -113,30 +121,40 @@ echo 'LANG="fr_FR.UTF-8"' > /etc/locale.conf
 # set keymap
 echo "KEYMAP=fr-pc" > /etc/vconsole.conf
 
+# install systemd-boot
+bootctl --path=/boot install
+cp /usr/share/systemd/bootctl/loader.conf /boot/loader/loader.conf
+echo "timeout 1" >> /boot/loader/loader.conf
+cat <<EOC > /boot/loader/entries/arch.conf
+title   Arch Linux
+linux   /vmlinuz-linux
+initrd  /initramfs-linux.img
+options root=UUID=${uuid} rw
+EOC
+
+# microcode management
+if lscpu | grep -qi intel; then
+  manufacturer="intel"
+elif lscpu | grep -qi amd; then
+  manufacturer="amd"
+fi
+if ! [ -z ${manufacturer} ]; then
+  pacman -S ${manufacturer}-ucode --noconfirm
+  sed -i "/^linux.*\/vm/a initrd  /${manufacturer}-ucode.img" /boot/loader/entries/arch.conf
+fi
+
 # no modifications to mkinitcpio.conf should be needed
 mkinitcpio -p linux
  
-# install syslinux bootloader
-pacman -S syslinux efibootmgr gptfdisk
-mkdir -p /boot/EFI/syslinux
-cp -r /usr/lib/syslinux/efi64/* /boot/EFI/syslinux
-efibootmgr --create --disk ${device} --part 1 --loader /EFI/syslinux/syslinux.efi --label "Syslinux" --verbose
-mv /boot/syslinux/syslinux.cfg /boot/EFI/syslinux/
-# update syslinux config with correct root disk
-sed -i "s/root=.*/root=UUID=${uuid} resume=UUID=${uuidSwap} rw/g" /boot/EFI/syslinux/syslinux.cfg
-
 # set root password to "root"
 echo root:azer | chpasswd
 
 # Set initial configuration
 echo -n "Quick basic configuration ... "
-sed -i -e 's/TIMEOUT 50/TIMEOUT 10/' /boot/syslinux/syslinux.cfg
 echo -e '\n[archlinuxfr]\nSigLevel = Never\nServer = http://repo.archlinux.fr/\$arch\n' >> /etc/pacman.conf
 pacman -Syu
 pacman -S pacman --noconfirm
 pacman -S vim bash-completion colordiff lsb-release --noconfirm
-# TODO: install yaourt from PKGBUILD
-#pacman -S yaourt --noconfirm
 pacman -S openssh ntp --noconfirm
 systemctl enable sshd
 systemctl enable ntpd
@@ -158,11 +176,7 @@ if [[ $wifi == "y" ]]; then
 fi
  
 # unmount
-swapoff /mnt/swapfile
 umount /mnt/{boot,}
-
-# Set Flag boot BIOS for GTP
-sgdisk ${device} --attributes=:1:set:2
  
 echo "Done! Unmount the CD image from the VM, then type 'reboot'."
 echo -e "\033[0;31m/!\ Password for root authentification is 'azer'\033[0m"
