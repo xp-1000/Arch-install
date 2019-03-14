@@ -1,6 +1,8 @@
 
 ### Tweaks bashrc
+
 PS1="$(if [[ ${EUID} == 0 ]]; then echo '\[\033[01;31m\]\h'; else echo '\[\033[01;32m\]\u@\h'; fi)\[\033[01;34m\] \w \$([[ \$? != 0 ]] && echo \"\[\033[01;31m\]:(\[\033[01;34m\] \")\\$\[\033[00m\] "
+
 ## New options
 # Enable options
 shopt -s cdspell
@@ -24,6 +26,7 @@ alias diff='colordiff'              # requires colordiff package
 alias grep='grep --color=auto'
 alias egrep='egrep --color=auto'
 alias fgrep='fgrep --color=auto'
+alias less='less -R'
 alias more='less'
 alias df='df -h'
 alias du='du -c -h'
@@ -36,6 +39,7 @@ alias wget='wget -c'
 alias da='date "+%y%m%d"'
 alias dat='date "+%d/%m/%Y [%T]"'
 alias du1='du --max-depth=1'
+alias dusort='du -h * | sort -h'
 alias hist='history | grep'         # requires an argument
 alias ports='ss -plutan'
 alias pss='ps -Af | grep'           # requires an argument
@@ -51,6 +55,9 @@ alias psmem10='ps auxf | sort -nr -k 4 | head -10'
 alias pscpu='ps auxf | sort -nr -k 3'
 alias pscpu10='ps auxf | sort -nr -k 3 | head -10'
 alias cpuinfo='lscpu'
+alias copy='xclip -sel clip'
+alias copp='xclip -sel clip -o'
+alias pcinfo="sudo dmidecode | grep --color=never -A5 '^System Information' && grep 'model name' /proc/cpuinfo | head -n 1 | sed 's/model name[[:space:]]*:[[:space:]]*/CPU Model\n\t/' && grep MemTotal /proc/meminfo | sed 's/MemTotal:[[:space:]]*/Memory\n\t/'"
 # }}}
 
 # Privileged access
@@ -93,21 +100,23 @@ alias cd..='cd ..'
 
 ## Pacman aliases ## {{{
 #if necessary, replace 'pacman' with your favorite AUR helper and adapt the commands accordingly
-alias pac="sudo /usr/bin/pacman -S"		# default action	- install one or more packages
-alias pacu="/usr/bin/pacman -Syu"		# '[u]pdate'		- upgrade all packages to their newest version
-alias pacr="sudo /usr/bin/pacman -Rs"		# '[r]emove'		- uninstall one or more packages
-alias pacs="/usr/bin/pacman -Ss"		# '[s]earch'		- search for a package using one or more keywords
-alias paci="/usr/bin/pacman -Si"		# '[i]nfo'		- show information about a package
-alias paclo="/usr/bin/pacman -Qdt"		# '[l]ist [o]rphans'	- list all packages which are orphaned
-alias pacc="sudo /usr/bin/pacman -Scc"		# '[c]lean cache'	- delete all not currently installed package files
-alias paclf="/usr/bin/pacman -Ql"		# '[l]ist [f]iles'	- list all files installed by a given package
-alias pacexpl="/usr/bin/pacman -D --asexp"	# 'mark as [expl]icit'	- mark one or more packages as explicitly installed 
-alias pacimpl="/usr/bin/pacman -D --asdep"	# 'mark as [impl]icit'	- mark one or more packages as non explicitly installed
-# '[r]emove [o]rphans' - recursively remove ALL orphaned packages
-alias pacro="/usr/bin/pacman -Qtdq > /dev/null && sudo /usr/bin/pacman -Rs \$(/usr/bin/pacman -Qtdq | sed -e ':a;N;$!ba;s/\n/ /g')"
+alias pac="sudo pacman -S"		                # default action	    - install one or more packages
+alias pacu="sudo pacman -Syu"		            # '[u]pdate'		    - upgrade all packages to their newest version
+alias pacr="sudo pacman -Rs"		            # '[r]emove'		    - uninstall one or more packages
+alias pacs="pacman -Ss"		                    # '[s]earch'		    - search for a package using one or more keywords
+alias pacsf="pacman -Fys"	                    # '[s]earch'		    - search for a package which contains a specific file
+alias paci="pacman -Si"		                    # '[i]nfo'		        - show information about a package
+alias paclo="pacman -Qdt"		                # '[l]ist [o]rphans'    - list all packages which are orphaned
+alias pacro="pacman -Rns $(pacman -Qtdq)"       # '[r]emove [o]rphans'  - remove all packages which are orphaned
+alias pacc="pacman -Sc" 		                # '[c]lean cache'       - delete all not currently installed package files
+alias paclf="pacman -Ql"		                # '[l]ist [f]iles'      - list all files installed by a given package
+alias pacexpl="pacman -D --asexp"	            # 'mark as [expl]icit'	- mark one or more packages as explicitly installed 
+alias pacimpl="pacman -D --asdep"	            # 'mark as [impl]icit'	- mark one or more packages as non explicitly installed
+alias pacrk="sudo pacman-key --refresh-keys"    # '[r]efresh [k]eys     - refresh pacman keys (error: key XXX could not be looked up remotely)
+alias pacrank="curl -s 'https://www.archlinux.org/mirrorlist/?country=FR&country=DE&country=IT&country=GB&protocol=https&use_mirror_status=on' | sed -e 's/^#Server/Server/' -e '/^#/d' | rankmirrors -n 6 - | sudo tee /etc/pacman.d/mirrorlist"
 # }}}
 
-# Functions
+## Functions
 man() {
     LESS_TERMCAP_md=$'\e[01;31m' \
     LESS_TERMCAP_me=$'\e[0m' \
@@ -117,3 +126,28 @@ man() {
     LESS_TERMCAP_us=$'\e[01;32m' \
     command man "$@"
 }
+
+bigfiles() {
+    if [ -z ${1} ]; then 
+        size="50M"
+    else
+        size="${1}"
+    fi
+    find . -xdev -type f -size +${size} -exec ls -lh {} \; | awk '{ print $9 " : " $5 }'
+}
+
+# Powerline-go
+function _update_ps1() {
+    #PS1="$(powerline-go -modules venv,user,host,ssh,cwd,perms,git,hg,jobs,exit,root,kube -shorten-gke-names -error $?)"
+    PS1="$(powerline-go -modules venv,user,ssh,cwd,perms,git,hg,jobs,exit,root,vgo,docker -theme ${HOME}/.config/powerline/theme.json -error $?)"
+   # PS1="$(powerline-go -modules venv,user,host,ssh,cwd,perms,git,hg,jobs,exit,root,vgo,docker -error $?)"
+}
+
+if [ "$TERM" != "linux" ] && [ -f "$GOPATH/bin/powerline-go" ]; then
+    export TERM='xterm-256color'
+    PROMPT_COMMAND="_update_ps1; $PROMPT_COMMAND"
+fi
+
+# fuck
+#eval $(thefuck --alias --enable-experimental-instant-mode)
+eval $(thefuck --alias)
