@@ -164,6 +164,9 @@ EOF
 if ! grep -q '### Tweaks bashrc' /mnt/etc/bash.bashrc; then
   cat `dirname $0`/files/bash/bash.bashrc >> /mnt/etc/bash.bashrc
 fi
+if ! grep -q '" vim custom config' /mnt/etc/vimrc; then
+  cat `dirname $0`/files/vim/vimrc >> /mnt/etc/vimrc
+fi
 cp -f `dirname $0`/files/bash/profile/* /mnt/etc/profile.d/
  
 while ! ([[ "$wifi" == "y" ]] || [[ "$wifi" == "n" ]]); do

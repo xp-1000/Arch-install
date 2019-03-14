@@ -12,39 +12,49 @@ if [[ $# -eq 0 ]]; then
   echo "Please provide your ursername with arg"
   exit 1
 fi
+
 useradd -m -G wheel -s /bin/bash $1
 echo "Please type your password"
 passwd $1
-pacman -S --noconfirm sudo fontconfig wget
-pacman -S --noconfirm powerline powerline-common powerline-fonts 
+
+pacman -S --noconfirm sudo fontconfig wget git
 sed -i 's/# %wheel ALL=(ALL) ALL/%wheel ALL=(ALL) ALL/' /etc/sudoers
 sed -i '/PS1=/d' /home/${1}/.bashrc
 sed -i '/alias ls/d' /home/${1}/.bashrc 
-if ! grep -q '# Powerline' /etc/bash.bashrc; then
+
+su $1 -c 'cd /tmp && git clone https://aur.archlinux.org/yay.git && cd yay && makepkg'
+pacman -U /tmp/yay/yay-*.pkg.tar.xz --noconfirm
+
+pacman -S thefuck --noconfirm
+if ! grep -q '^# Fuck' /etc/bash.bashrc; then
   cat <<EOF >> /etc/bash.bashrc
-# Powerline 
-export TERM='xterm-256color'
-export XDG_CONFIG_DIRS='/etc/conf.d'
-if [ -f /usr/lib/python3.[5-9]/site-packages/powerline/bindings/bash/powerline.sh ]; then
-  powerline-daemon -q
-  POWERLINE_BASH_CONTINUATION=1
-  POWERLINE_BASH_SELECT=1
-  source /usr/lib/python3.[5-9]/site-packages/powerline/bindings/bash/powerline.sh
-fi
+# Fuck
+#eval \$(thefuck --alias --enable-experimental-instant-mode)
+eval \$(thefuck --alias)
+
 EOF
 fi
-mkdir -p /etc/conf.d/powerline/
-cat <<EOF > /etc/conf.d/powerline/config.json
-{
-    "ext": {
-        "shell": {
-            "theme": "default_leftonly"
-        }
-    }
+
+su $1 -c 'cd /tmp && git clone https://aur.archlinux.org/powerline-go-bin.git && cd powerline-go-bin && makepkg'
+pacman -U /tmp/powerline-go-bin/powerline-go-bin*.pkg.tar.xz --noconfirm
+if ! grep -q '^# Powerline-go' /etc/bash.bashrc; then
+  cat <<EOF >> /etc/bash.bashrc
+# Powerline-go
+function _update_ps1() {
+    PS1="\$(powerline-go -modules venv,user,ssh,cwd,perms,git,hg,jobs,exit,root,vgo,docker -theme /etc/conf.d/powerline-go/theme.json -error \$?)"
 }
+
+if [ "\$TERM" != "linux" ] && [ -f "\$GOPATH/bin/powerline-go" ]; then
+    export TERM='xterm-256color'
+    PROMPT_COMMAND="_update_ps1; \$PROMPT_COMMAND"
+fi
+
 EOF
+fi
+
+mkdir -p /etc/conf.d/powerline-go/
+cp -f files/powerline-go/* /etc/conf.d/powerline-go/
+
 pacman -S --noconfirm xorg-server xorg-server-common xorg-xinput xorg-xclock xorg-twm xorg-xinit xf86-video-fbdev alsa-utils
 cp -f `dirname $0`/files/xorg/* /etc/X11/xorg.conf.d/
 echo "You need to install right video driver manually"
-#echo "Installing generic vesa driver"
-#yaourt -S --noconfirm xf86-video-vesa

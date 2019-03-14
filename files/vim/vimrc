@@ -1,0 +1,58 @@
+
+" vim custom config
+syntax on
+
+" global
+set nocompatible
+set ttyfast
+" mouse
+set mouse=a
+set ttymouse=dec
+" search
+set ignorecase
+set smartcase
+set incsearch
+set hlsearch
+" encoding
+set encoding=utf-8
+set fileencoding=utf-8
+set termencoding=utf-8
+set backspace=indent,eol,start
+" indentation, space and tab
+set autoindent
+set expandtab
+set tabstop=4
+set breakindent
+set shiftwidth=4
+set softtabstop=4
+set linebreak
+set backspace=indent,eol,start
+" various
+set nostartofline
+set ruler
+set scrolloff=5
+set autoread
+set history=500
+set undolevels=500
+set confirm
+set visualbell
+set t_vb=
+set cmdheight=2
+set notimeout ttimeout ttimeoutlen=200
+set pastetoggle=<F11>
+
+filetype indent plugin on
+autocmd FileType python,c,cpp setlocal breakindentopt=shift:4
+
+" lightline config
+set laststatus=2
+if !has('gui_running')
+  set t_Co=256
+endif
+let g:lightline = {
+      \ 'colorscheme': 'one',
+      \ }
+
+set splitright
+" colorscheme ron
+colorscheme iceberg

@@ -136,18 +136,3 @@ bigfiles() {
     find . -xdev -type f -size +${size} -exec ls -lh {} \; | awk '{ print $9 " : " $5 }'
 }
 
-# Powerline-go
-function _update_ps1() {
-    #PS1="$(powerline-go -modules venv,user,host,ssh,cwd,perms,git,hg,jobs,exit,root,kube -shorten-gke-names -error $?)"
-    PS1="$(powerline-go -modules venv,user,ssh,cwd,perms,git,hg,jobs,exit,root,vgo,docker -theme ${HOME}/.config/powerline/theme.json -error $?)"
-   # PS1="$(powerline-go -modules venv,user,host,ssh,cwd,perms,git,hg,jobs,exit,root,vgo,docker -error $?)"
-}
-
-if [ "$TERM" != "linux" ] && [ -f "$GOPATH/bin/powerline-go" ]; then
-    export TERM='xterm-256color'
-    PROMPT_COMMAND="_update_ps1; $PROMPT_COMMAND"
-fi
-
-# fuck
-#eval $(thefuck --alias --enable-experimental-instant-mode)
-eval $(thefuck --alias)
