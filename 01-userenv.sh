@@ -45,7 +45,8 @@ if ! grep -q '^# Powerline-go' /etc/bash.bashrc; then
   cat <<EOF >> /etc/bash.bashrc
 # Powerline-go
 function _update_ps1() {
-    PS1="\$(powerline-go -modules venv,user,ssh,cwd,perms,git,hg,jobs,exit,root,vgo,docker -theme /etc/conf.d/powerline-go/theme.json -error \$?)"
+    #PS1="\$(powerline-go -modules venv,user,ssh,cwd,perms,git,hg,jobs,exit,root,vgo,docker -theme /etc/conf.d/powerline-go/theme.json -error \$?)"
+    PS1="\$(powerline-go -modules venv,user,ssh,cwd,perms,git,hg,jobs,exit,root,vgo,docker -error \$?)"
 }
 
 if [ "\$TERM" != "linux" ] && [ -f "\$GOPATH/bin/powerline-go" ]; then
@@ -55,15 +56,17 @@ fi
 
 EOF
 fi
+#mkdir -p /etc/conf.d/powerline-go/
+#cp -f $(dirname $0)/files/powerline-go/* /etc/conf.d/powerline-go/
 
-mkdir -p /etc/conf.d/powerline-go/
-cp -f files/powerline-go/* /etc/conf.d/powerline-go/
-
-cp -f files/git/gitconfig /home/${1}/.gitconfig
+cp -f $(dirname $0)/files/git/gitconfig /home/${1}/.gitconfig
 
 pacman -S --noconfirm xorg-server xorg-server-common xorg-xinput xorg-xclock xorg-twm xorg-xinit xf86-video-fbdev alsa-utils
-cp -f `dirname $0`/files/xorg/* /etc/X11/xorg.conf.d/
+cp -f $(dirname $0)/files/xorg/* /etc/X11/xorg.conf.d/
 
 rm -fr /tmp/userenv
+
+mkdir ${HOME}/go
+echo -e '\nPATH=${PATH}:${HOME}/.local/bin/:${HOME}/go/bin' >> ${HOME}/.bashrc
 
 echo "You need to install right video driver manually"
