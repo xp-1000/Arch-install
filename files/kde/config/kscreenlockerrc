@@ -1,0 +1,6 @@
+[Daemon]
+LockGrace=30
+Timeout=15
+
+[Greeter]
+Theme=com.github.varlesh.arc-dark

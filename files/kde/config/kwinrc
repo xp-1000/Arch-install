@@ -2,6 +2,8 @@
 OpenGLIsUnsafe=false
 
 [Desktops]
+Id_1=59224653-6015-40c7-9240-5be7c1d444c7
+Id_2=070e8a65-0bad-4411-9554-069265304180
 Name_1=Travail
 Name_2=Detente
 Number=2
@@ -135,3 +137,11 @@ ShadeHoverInterval=250
 SnapOnlyWhenOverlapping=false
 TitlebarDoubleClickCommand=Maximize
 WindowSnapZone=10
+
+[org.kde.kdecoration2]
+BorderSize=Normal
+ButtonsOnLeft=MS
+ButtonsOnRight=HIAX
+CloseOnDoubleClickOnMenu=false
+library=org.kde.kwin.aurorae
+theme=__aurorae__svg__Arc-Dark
