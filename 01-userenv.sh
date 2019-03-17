@@ -66,7 +66,7 @@ cp -f $(dirname $0)/files/xorg/* /etc/X11/xorg.conf.d/
 
 rm -fr /tmp/userenv
 
-mkdir ${HOME}/go
-echo -e '\nPATH=${PATH}:${HOME}/.local/bin/:${HOME}/go/bin' >> ${HOME}/.bashrc
+mkdir /home/${1}/go /home/${1}/.local/bin
+echo -e '\nGOPATH=${HOME}/go\nPATH=${PATH}:${HOME}/.local/bin/:${HOME}/go/bin' >> /home/${1}/.bashrc
 
 echo "You need to install right video driver manually"
