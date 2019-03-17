@@ -9,7 +9,6 @@ if [[ $EUID -eq 0 ]]; then
 fi
 yay -S --noconfirm plasma-meta plasma-wayland-session 
 yay -S --noconfirm yakuake phonon-qt5-vlc kscreen hunspell-fr spectacle okular breeze-gtk ark
-yay -Rsn --noconfirm konqueror kate 
 yay -S --noconfirm ttf-freefont ttf-dejavu ttf-liberation networkmanager atom cups print-manager
 yay -S --noconfirm papirus-icon-theme arc-gtk-theme arc-kde kvantum-theme-arc kvantum-qt5 kde-gtk-config
 sudo systemctl enable sddm.service
@@ -44,7 +43,7 @@ sed -i 's/^gtk-icon-theme-name=.*/gtk-icon-theme-name="Papirus-Dark"/g' ${HOME}/
 sed -i 's/^gtk-theme-name=.*/gtk-theme-name="Arc-Dark"/g' ${HOME}/.gtkrc-2.0
 sed -i 's/^include .*/include "\/usr\/share\/themes\/Arc-Dark\/gtk-2.0\/gtkrc"/g' ${HOME}/.gtkrc-2.0
 sed -i 's/^ksplashrc_ksplash_theme=.*/ksplashrc_ksplash_theme=com.github.varlesh.arc-dark/g' ${HOME}/.config/startupconfig
-echo -e '\n[Greeter]\nTheme=com.github.varlesh.arc-dark' >> .config/kscreenlockerrc
+echo -e '\n[Greeter]\nTheme=com.github.varlesh.arc-dark' >> ${HOME}/.config/kscreenlockerrc
 sed -i 's/^Theme=.*/Theme=Papirus-Dark/g' ${HOME}/.kde4/share/config/kdeglobals ${HOME}/.config/kdeglobals
 sed -i 's/^ColorScheme=.*/ColorScheme=Arc-Dark/g' ${HOME}/.kde4/share/config/kdeglobals ${HOME}/.config/kdeglobals
 sed -i 's/^widgetStyle=.*/widgetStyle=kvantum-dark/g' ${HOME}/.kde4/share/config/kdeglobals ${HOME}/.config/kdeglobals
