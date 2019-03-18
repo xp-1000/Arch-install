@@ -69,5 +69,3 @@ rm -fr /tmp/userenv
 mkdir -p /home/${1}/go /home/${1}/.local/bin
 chown -R $1. /home/${1}
 echo -e '\nGOPATH=${HOME}/go\nPATH=${PATH}:${HOME}/.local/bin/:${HOME}/go/bin' >> /home/${1}/.bashrc
-
-echo "You need to install right video driver manually"

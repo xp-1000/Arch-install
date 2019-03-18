@@ -7,8 +7,8 @@ if [[ $EUID -eq 0 ]]; then
    exit 1
 fi
 yay -S --noconfirm plasma-meta plasma-wayland-session 
-yay -S --noconfirm yakuake phonon-qt5-vlc kscreen hunspell-fr spectacle okular breeze-gtk ark code
-yay -S --noconfirm ttf-freefont ttf-dejavu ttf-liberation networkmanager atom cups print-manager
+yay -S --noconfirm yakuake phonon-qt5-vlc kscreen hunspell-fr spectacle okular breeze-gtk ark code dolphin
+yay -S --noconfirm ttf-freefont ttf-dejavu ttf-liberation networkmanager cups print-manager sddm-kcm
 yay -S --noconfirm papirus-icon-theme arc-gtk-theme arc-kde kvantum-theme-arc kvantum-qt5 kde-gtk-config
 sudo systemctl enable sddm.service
 sudo systemctl enable NetworkManager.service
