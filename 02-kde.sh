@@ -10,6 +10,7 @@ yay -S --noconfirm plasma-meta plasma-wayland-session
 yay -S --noconfirm yakuake phonon-qt5-vlc kscreen hunspell-fr spectacle okular breeze-gtk ark code dolphin
 yay -S --noconfirm ttf-freefont ttf-dejavu ttf-liberation networkmanager cups print-manager sddm-kcm
 yay -S --noconfirm papirus-icon-theme arc-gtk-theme arc-kde kvantum-theme-arc kvantum-qt5 kde-gtk-config
+yay -S --noconfirm kdeconnect sshfs powerdevil
 sudo systemctl enable sddm.service
 sudo systemctl enable NetworkManager.service
 sudo systemctl enable cups-browsed.service
