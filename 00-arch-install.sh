@@ -30,7 +30,7 @@ done
 echo -e "\033[0;31m/!\ Warning : $device will be totally erased !\033[0m"
 go=""
 while ! ([[ "$go" == "y" ]] || [[ "$go" == "n" ]]); do
- read -p "Are you sure to continue ? (y/n): " -e go
+  read -p "Are you sure to continue ? (y/n): " -e go
 done
 if [[ $go == "n" ]]; then
   exit 1
@@ -159,21 +159,24 @@ pacman -S openssh ntp --noconfirm
 systemctl enable sshd
 systemctl enable ntpd
 
+sed -i 's/^#[[:space:]]*Color/Color/g' /etc/pacman.conf
+sed -i 's/^#[[:space:]]*VerbosePkgLists/VerbosePkgLists/g' /etc/pacman.conf
+
 # end section sent to chroot
 EOF
 
 # Add default bashrc and profile files
 if ! grep -q '### Tweaks bashrc' /mnt/etc/bash.bashrc; then
-  cat `dirname $0`/files/bash/bash.bashrc >> /mnt/etc/bash.bashrc
+  cat $(dirname $0)/files/bash/bash.bashrc >> /mnt/etc/bash.bashrc
 fi
 if ! grep -q '" vim custom config' /mnt/etc/vimrc; then
-  cat `dirname $0`/files/vim/vimrc >> /mnt/etc/vimrc
+  cat $(dirname $0)/files/vim/vimrc >> /mnt/etc/vimrc
 fi
-cp -f `dirname $0`/files/bash/profile/* /mnt/etc/profile.d/
+cp -f $(dirname $0)/files/bash/profile/* /mnt/etc/profile.d/
  
 wifi=""
 while ! ([[ "$wifi" == "y" ]] || [[ "$wifi" == "n" ]]); do
- read -p "Do you want install wifi support ? (y/n): " -e wifi
+  read -p "Do you want install wifi support ? (y/n): " -e wifi
 done
 if [[ $wifi == "y" ]]; then
   pacstrap /mnt dialog wpa_supplicant
