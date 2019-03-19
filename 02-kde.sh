@@ -7,7 +7,7 @@ if [[ $EUID -eq 0 ]]; then
    exit 1
 fi
 yay -S --noconfirm plasma-meta plasma-wayland-session 
-yay -S --noconfirm yakuake phonon-qt5-vlc kscreen hunspell-fr spectacle okular breeze-gtk ark code dolphin
+yay -S --noconfirm yakuake phonon-qt5-vlc kscreen hunspell-fr spectacle okular breeze-gtk ark dolphin
 yay -S --noconfirm ttf-freefont ttf-dejavu ttf-liberation networkmanager cups print-manager sddm-kcm
 yay -S --noconfirm papirus-icon-theme arc-gtk-theme arc-kde kvantum-theme-arc kvantum-qt5 kde-gtk-config
 yay -S --noconfirm kdeconnect sshfs powerdevil
@@ -30,6 +30,11 @@ while ! [ -f ${HOME}/.config/plasmashellrc ]; do
 done
 yay -S --noconfirm firefox-kde-opensuse-bin
 yay -S --noconfirm firefox-i18n-fr
+yay -S --noconfirm code
+code --install-extension rdnlsmith.linux-themes
+code --install-extension ms-vscode.go
+code --install-extension ms-python.python
+code --install-extension shd101wyy.markdown-preview-enhanced
 mkdir -p ${HOME}/.config/autostart/
 mkdir -p ${HOME}/.compose-cache/
 ln -sfv /run/user/$UID/ ${HOME}/.compose-cache
