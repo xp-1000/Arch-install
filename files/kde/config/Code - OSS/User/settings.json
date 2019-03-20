@@ -1,0 +1,15 @@
+{
+    "workbench.colorTheme": "Arc Dark",
+    "keyboard.dispatch": "keyCode",
+    "terminal.integrated.rendererType": "dom",
+    "terraform.format": {
+        "ignoreExtensionsOnSave": [
+          ".tfvars"
+        ],
+        "enable": true,
+        "formatOnSave": true
+    },
+    "[terraform]": {
+        "editor.formatOnSave": true
+    }
+}
