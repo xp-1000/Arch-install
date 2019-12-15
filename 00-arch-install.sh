@@ -37,7 +37,7 @@ if [[ $go == "n" ]]; then
 fi
 
 suffix=""
-if [[ "${device}" == *"nvme"* ]];
+if [[ "${device}" == *"nvme"* ]] || [[ "${device}" == *"mmc"* ]];
   then suffix="p"
 fi
  
@@ -90,7 +90,7 @@ pacman -S --noconfirm archlinux-keyring
 
 echo "Installing ArchLinux ... "
 # install base packages (take a coffee break if you have slow internet)
-pacstrap /mnt base base-devel
+pacstrap /mnt base linux linux-firmware
  
 # copy ranked mirrorlist over
 cp /etc/pacman.d/mirrorlist* /mnt/etc/pacman.d
@@ -144,7 +144,7 @@ if ! [ -z ${manufacturer} ]; then
 fi
 
 # no modifications to mkinitcpio.conf should be needed
-mkinitcpio -p linux
+mkinitcpio -P
  
 # set root password to "root"
 echo root:azer | chpasswd
